@@ -1,0 +1,41 @@
+@use '@/variables' as v;
+
+.multiDropdown {
+  position: relative;
+}
+
+.empty input::placeholder {
+  color: v.$text-secondary;
+}
+
+.values input::placeholder {
+  color: v.$text-primary;
+}
+
+.options {
+  background-color: v.$dropdown-options-bg;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  
+  &:hover {
+    box-shadow: v.$shadow;
+  }
+}
+
+
+.option {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: v.$space-s v.$space-xs;
+
+  &:hover .optionItem {
+    color: v.$text-secondary;
+  }
+  
+  &:hover .selected {
+    color: v.$text-accent;
+  }
+}
