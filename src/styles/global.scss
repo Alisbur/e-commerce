@@ -1,5 +1,5 @@
-@use '@/variables' as v;
-@import '@/Fonts/fonts.scss';
+@use 'styles/variables' as v;
+@import 'styles/Fonts/fonts.scss';
 
 html, body {
   font-family: v.$main-font;
