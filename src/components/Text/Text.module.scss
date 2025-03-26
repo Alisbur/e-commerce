@@ -1,5 +1,5 @@
-@use '@/variables' as v;
-@use '@/mixins' as m;
+@use 'styles/variables' as v;
+@use 'styles/mixins' as m;
 
 .view_button, .view_title, .view_p-20, .view_p-18, .view_p-16, .view_p-14 {
   @include m.setFont($fontName: v.$main-font, $fontWeight: v.$fw-400, $letterSpacing: v.$ls-0);
