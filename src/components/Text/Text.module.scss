@@ -52,3 +52,7 @@
 .text_medium {
   @include m.setFont($fontWeight: v.$fw-500);
 }
+
+.text_semibold {
+  @include m.setFont($fontWeight: v.$fw-600);
+}
