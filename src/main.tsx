@@ -1,4 +1,4 @@
-import { routesConfig } from "./config/routes";
+import { routesConfig } from "config/routesConfig";
 import { createRoot } from "react-dom/client";
 import "styles/global.scss";
 import { createBrowserRouter, RouterProvider } from "react-router";
