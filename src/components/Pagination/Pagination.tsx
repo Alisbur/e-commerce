@@ -8,10 +8,10 @@ export type TPaginationProps = {
   pageCount?: number | null;
   next: () => void;
   prev: () => void;
-  goto: (n: number) => void;
+  goTo: (n: number) => void;
 };
 
-const Pagination: FC<TPaginationProps> = ({ page = 1, pageCount = 1, next, prev, goto }) => {
+const Pagination: FC<TPaginationProps> = ({ page = 1, pageCount = 1, next, prev, goTo }) => {
   if (typeof page !== 'number' || typeof pageCount !== 'number') return null;
 
   return (
@@ -34,7 +34,7 @@ const Pagination: FC<TPaginationProps> = ({ page = 1, pageCount = 1, next, prev,
               key={idx}
               className={classNames(styles.pagination__page, { [styles.pagination__page_active]: page === idx + 1 })}
               role="button"
-              onClick={() => goto(idx + 1)}
+              onClick={() => goTo(idx + 1)}
             >
               {idx + 1}
             </li>

@@ -4,10 +4,20 @@ import { TErrorResponse, TProductResponse } from 'entities/types/types';
 import { API_ROUTES } from 'api/config/api-routes';
 import { DEFAULT_ERROR } from 'api/config/default-error';
 
-export const getProductDetails = async (documentId: string, searchParams: string): Promise<TProductResponse> => {
+export const getProductDetails = async ({
+  documentId,
+  searchParams,
+}: {
+  documentId: string;
+  searchParams: string;
+}): Promise<TProductResponse> => {
   try {
     const { data }: AxiosResponse<TProductResponse> = await axiosInstance.get<TProductResponse>(
-      `${API_ROUTES.products}/${documentId}?${searchParams}`,
+      `${API_ROUTES.products}/${documentId}`,
+      {
+        params: { s: searchParams },
+        paramsSerializer: ({ s }) => s,
+      },
     );
     return data;
   } catch (e: unknown) {

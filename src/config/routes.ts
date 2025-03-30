@@ -2,7 +2,6 @@ export const PAGE_ROUTES = {
   main: {
     mask: '/',
     create: () => '/',
-    navigate: '/products',
   },
   products: {
     mask: '/',

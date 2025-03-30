@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router';
-import qs from 'qs';
 import styles from './ProductCard.module.scss';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
@@ -10,7 +9,7 @@ import { TProduct, TProductResponse } from 'entities/types/types';
 import ProductDetails from './components/ProductDetails';
 import RelatedProducts from './components/RelatedProducts';
 import { handleAddToCart, handleBuyNow } from 'utils/cart';
-import { makeProductDetailsParams } from 'api/utils';
+import { makeProductDetailsSearchParams } from 'api/utils';
 
 const ProductCard = () => {
   const { documentId } = useParams();
@@ -20,11 +19,10 @@ const ProductCard = () => {
 
   useEffect(() => {
     if (documentId) {
-      const searchConfig = makeProductDetailsParams();
-      const searchParams = qs.stringify(searchConfig, { encode: false });
+      const searchParams = makeProductDetailsSearchParams();
 
       setProductIsLoading(true);
-      getProductDetails(documentId, searchParams)
+      getProductDetails({ documentId, searchParams })
         .then((res: TProductResponse) => {
           setProduct(res.data);
         })
@@ -35,12 +33,10 @@ const ProductCard = () => {
     }
   }, [documentId]);
 
-  const goBack = () => navigate(-1);
-
   return (
     <section className={styles.wrapper}>
       <div className={styles.content}>
-        <BackButton caption="Назад" onBack={goBack} />
+        <BackButton caption="Назад" onBack={() => navigate(-1)} />
         {product && (
           <ProductDetails product={product} isLoading={productIsLoading}>
             <Button onClick={() => handleBuyNow(product.id)}>Buy Now</Button>

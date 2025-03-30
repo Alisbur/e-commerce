@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import qs from 'qs';
 import styles from './Products.module.scss';
 import { getProductList } from 'api/agent/list';
 import TitleBlock from 'components/TitleBlock';
@@ -11,7 +10,8 @@ import Pagination from 'components/Pagination';
 import ProductCardsList from 'components/ProductCardsList';
 import { useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils/cart';
-import { makeProductsListParams } from 'api/utils';
+import { makeProductsListSearchParams } from 'api/utils';
+import { PAGE_ROUTES } from 'config/routes';
 
 export type TFilterOption = { key: string; value: string };
 
@@ -29,6 +29,8 @@ const paginationInitValue = {
   total: null,
 };
 
+const ITEMS_PER_PAGE = 9;
+
 const Products = () => {
   const [searchString, setSearchString] = useState('');
   const [filterValue, setFilterValue] = useState<TFilterOption[]>([]);
@@ -36,13 +38,12 @@ const Products = () => {
   const [pagination, setPagination] = useState<TPagination>(paginationInitValue);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const ITEMS_PER_PAGE = 9;
 
   useEffect(() => {
-    const searchConfig = makeProductsListParams({ productsPerPage: ITEMS_PER_PAGE });
-    const searchParams = qs.stringify(searchConfig, { encode: false });
+    const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
+
     setIsLoading(true);
-    getProductList(searchParams)
+    getProductList({ searchParams })
       .then((res: TProductListResponse) => {
         setProducts(res.data);
         setPagination(res.meta.pagination);
@@ -76,7 +77,7 @@ const Products = () => {
   const handleSearch = () => {};
 
   const handleCardClick = (documentId: string) => {
-    navigate(`/product/${documentId}`);
+    navigate(PAGE_ROUTES.product.create(documentId));
   };
 
   return (
@@ -107,7 +108,7 @@ const Products = () => {
                 pageCount={pagination.pageCount}
                 next={handleNextPage}
                 prev={handlePrevPage}
-                goto={handleNGotoPage}
+                goTo={handleNGotoPage}
               />
             ) : undefined
           }

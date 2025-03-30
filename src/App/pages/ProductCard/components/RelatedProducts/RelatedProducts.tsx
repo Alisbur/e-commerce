@@ -1,40 +1,41 @@
 import { FC, useEffect, useState } from 'react';
 import styles from './RelatedProducts.module.scss';
-import qs from 'qs';
 import ProductCardsList from 'components/ProductCardsList';
 import { TProduct, TProductListResponse } from 'entities/types/types';
 import { getProductList } from 'api/agent/list';
 import Text from 'components/Text';
 import { useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils/cart';
-import { makeRelatedProductsParams } from 'api/utils';
+import { makeRelatedProductsSearchParams } from 'api/utils';
+import { PAGE_ROUTES } from 'config/routes';
 
 type TRelatedProductsProps = {
   productDocumentId: string;
   productCategoryDocumentId: string;
 };
 
+const RELATED_ITEMS_QUANTITY = 3;
+
 const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId }) => {
   const [relatedIsLoading, setrelatedIsLoading] = useState(false);
   const [related, setRelated] = useState<TProduct[]>([]);
-  const RELATED_ITEMS_QUANTITY = 3;
 
   const navigate = useNavigate();
 
   const handleCardClick = (documentId: string) => {
-    navigate(`/product/${documentId}`);
+    navigate(PAGE_ROUTES.product.create(documentId));
   };
 
   useEffect(() => {
     if (productDocumentId && productCategoryDocumentId) {
-      const serchConfig = makeRelatedProductsParams({
+      const searchParams = makeRelatedProductsSearchParams({
         productCategoryDocumentId,
         productDocumentId,
         quantity: RELATED_ITEMS_QUANTITY,
       });
-      const searchParams = qs.stringify(serchConfig, { encode: false });
+
       setrelatedIsLoading(true);
-      getProductList(searchParams)
+      getProductList({ searchParams })
         .then((res: TProductListResponse) => {
           setRelated(res.data);
         })

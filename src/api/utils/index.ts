@@ -1,3 +1,3 @@
-export * from './makeProductDetailsParams';
-export * from './makeProductsListParams';
-export * from './makeRelatedProductsParams';
+export * from './makeProductDetailsSearchParams';
+export * from './makeProductsListSearchParams';
+export * from './makeRelatedProductsSearchParams';
