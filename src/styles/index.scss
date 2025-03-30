@@ -1,7 +1,9 @@
-@use 'styles/variables' as v;
-@import 'styles/Fonts/fonts.scss';
+@use "styles/variables" as v;
+@import "styles/Fonts/fonts.scss";
 
-html, body, ul {
+html,
+body,
+ul {
   font-family: v.$main-font;
   margin: 0;
   padding: 0;

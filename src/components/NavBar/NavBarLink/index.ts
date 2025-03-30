@@ -1,1 +1,1 @@
-export { default } from './NavBarLink'
+export { default } from './NavBarLink';

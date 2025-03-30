@@ -8,7 +8,7 @@ export type TextProps = {
   /** Дополнительный класс */
   className?: string;
   /** Стиль отображения */
-  view?: 'title' | 'button' | 'p-20' | 'p-18' | 'p-16' | 'p-14';
+  view?: 'title' | 'subtitle' | 'button' | 'p-20' | 'p-18' | 'p-16' | 'p-14';
   /** Html-тег */
   tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div' | 'p' | 'span';
   /** Начертание шрифта */
@@ -37,8 +37,7 @@ const Text: React.FC<TextProps> = ({ className, view, tag = 'p', weight, childre
         Boolean(view) && styles[`view_${view}`],
         isClamped && styles.clamped,
         Boolean(color) && styles[`text_${color}`],
-        weight === 'medium' && styles.text_medium,
-        weight === 'semibold' && styles.text_semibold,
+        Boolean(weight) && styles[`text_${weight}`],
         className,
       )}
       style={extraStyles}

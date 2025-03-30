@@ -1,0 +1,51 @@
+@use "styles/variables" as v;
+@use "styles/mixins" as m;
+
+.slider {
+  position: relative;
+  width: 100%;
+
+  &:hover &__button_left,
+  &:hover &__button_right {
+    opacity: 0.5;
+  }
+
+  &__button_left,
+  &__button_right {
+    position: absolute;
+    cursor: pointer;
+    width: 64px;
+    height: 64px;
+    background-color: v.$slider-button-bg;
+    box-shadow: v.$slider-button-shadow;
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+    color: v.$slider-arrow;
+    opacity: 0.1;
+    transition: opacity 0.5s;
+  }
+
+  &__button_left:hover,
+  &__button_right:hover {
+    opacity: 0.4 !important;
+  }
+
+  &__button_left {
+    left: v.$space-xl;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &__button_right {
+    right: v.$space-xl;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &__image {
+    width: 100%;
+    object-fit: contain;
+    aspect-ratio: 1 / 1;
+  }
+}

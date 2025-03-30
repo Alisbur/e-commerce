@@ -1,0 +1,15 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1440px;
+  padding: 100px 100px 113px 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

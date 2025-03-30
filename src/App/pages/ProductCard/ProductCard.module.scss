@@ -1,0 +1,19 @@
+@use 'styles/variables' as v;
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 69px;
+}
+
+.content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1440px;
+  padding: 60px 100px 146px 100px;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-xxl;
+}

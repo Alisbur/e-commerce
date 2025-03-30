@@ -1,0 +1,11 @@
+@use 'styles/variables' as v;
+
+.wrapper {
+  width: 100%;
+  padding-top: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: v.$space-l;
+}

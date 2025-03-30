@@ -1,4 +1,4 @@
-@use 'styles/variables' as v;
+@use "styles/variables" as v;
 
 .multiDropdown {
   position: relative;
@@ -18,12 +18,12 @@
   top: 60px;
   left: 0;
   right: 0;
-  
+  z-index: 9999;
+
   &:hover {
     box-shadow: v.$shadow;
   }
 }
-
 
 .option {
   cursor: pointer;
@@ -34,7 +34,7 @@
   &:hover .optionItem {
     color: v.$text-secondary;
   }
-  
+
   &:hover .selected {
     color: v.$text-accent;
   }

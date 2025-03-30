@@ -1,4 +1,4 @@
-@use 'styles/variables' as v;
+@use "styles/variables" as v;
 
 .linkWrapper {
   height: 90px;
@@ -10,7 +10,7 @@
   text-decoration: none;
 
   &_active::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 100%;
     left: 0;
@@ -18,6 +18,5 @@
     transform: translateY(35px);
     height: 2px;
     background-color: v.$text-accent;
-  }  
+  }
 }
-

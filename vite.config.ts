@@ -18,9 +18,6 @@ const parseTsConfigPaths = (paths: Record<string, string[]>): Record<string, str
   return webpackConfigAliases;
 };
 
-
-
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {

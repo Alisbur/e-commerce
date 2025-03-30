@@ -1,0 +1,21 @@
+@use "styles/variables" as v;
+
+.wrapper {
+  padding-top: 50px;
+  padding-bottom: 48px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-xl;
+}
+
+.find {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: v.$space-xl;
+}
+
+.filter {
+  width: 300px;
+}

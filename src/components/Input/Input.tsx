@@ -4,10 +4,7 @@ import styles from './Input.module.scss';
 
 const cx = classNames.bind(styles);
 
-export type InputProps = Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  'onChange' | 'value'
-> & {
+export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & {
   /** Значение поля */
   value: string;
   /** Callback, вызываемый при вводе данных в поле */
@@ -18,7 +15,6 @@ export type InputProps = Omit<
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ value, onChange, afterSlot, disabled, placeholder, className, ...rest }, ref) => {
-
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value);
     };
@@ -37,7 +33,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {!!afterSlot && afterSlot}
       </div>
     );
-  }
+  },
 );
 
 export default Input;
