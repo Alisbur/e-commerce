@@ -23,13 +23,11 @@ const NavBar: FC = () => {
         ))}
       </ul>
       <div className={styles.navBar__accountLinks}>
-        <NavLink to={routes.products.mask} className={styles.navBar__accountLink}>{
-          ({isActive}) => (<BagIcon width={30} height={30} color={isActive ? 'accent' : 'primary'}/>)
-        }
+        <NavLink to={routes.cart.mask} className={styles.navBar__accountLink}>
+          {({ isActive }) => <BagIcon width={30} height={30} color={isActive ? 'accent' : 'primary'} />}
         </NavLink>
-        <NavLink to="/" className={styles.navBar__accountLink}>{
-          ({isActive}) => (<UserIcon width={30} height={30} color={isActive ? 'accent' : 'primary'}/>)
-          }
+        <NavLink to={routes.account.mask} className={styles.navBar__accountLink}>
+          {({ isActive }) => <UserIcon width={30} height={30} color={isActive ? 'accent' : 'primary'} />}
         </NavLink>
       </div>
     </div>

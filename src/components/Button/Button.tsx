@@ -11,6 +11,8 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
   /** Текст кнопки */
   children: React.ReactNode;
+  /** Стиль кнопки */
+  variant?: 'brand' | 'white';
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,6 +21,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   disabled,
   className,
+  variant = 'brand',
   ...rest
 }) => {
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -32,15 +35,16 @@ const Button: React.FC<ButtonProps> = ({
     <button
       className={cx(
         styles.button,
-        disabled && styles.button_disabled,
+        styles[`button_${variant}`],
+        disabled && styles[`button_${variant}_disabled`],
         loading && styles.noHover,
-        className
+        className,
       )}
       onClick={handleClick}
       disabled={disabled || loading}
       {...rest}
     >
-      {loading && <Loader size="s" />}
+      {loading && <Loader size="s" className={styles.loader} />}
       <Text view="button" tag="span">
         {children}
       </Text>

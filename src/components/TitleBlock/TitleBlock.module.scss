@@ -1,0 +1,13 @@
+@use "styles/variables" as v;
+
+.wrapper {
+  width: 100%;
+  max-width: 653px;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-xl;
+}
+
+.center {
+  text-align: center;
+}

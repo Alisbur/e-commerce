@@ -1,15 +1,15 @@
-@use 'styles/variables' as v;
+@use "styles/variables" as v;
 
 .card {
   max-width: 360px;
   min-width: 200px;
   position: relative;
-  padding-bottom: v.$space-xl;
+  padding-bottom: v.$space-xxxl;
   background-color: v.$card-bg;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: v.$space-xl;
+  gap: v.$space-xxxl;
+  cursor: pointer;
 
   &__header_image {
     width: 100%;
@@ -17,19 +17,21 @@
     object-fit: cover;
     background-color: v.$card-image-bg;
   }
-  
+
   &__content {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    padding-inline: v.$space-xs;
-    gap: v.$space-l;
-  }
-  
-  &__content_about {
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding-inline: v.$space-xs;
+    gap: v.$space-xxl;
+  }
+
+  &__content_about {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     gap: v.$space-xxs;
     width: 100%;
     color: v.$text-secondary;
@@ -37,7 +39,7 @@
     text-overflow: ellipsis;
     overflow-wrap: break-word;
   }
-  
+
   &__content_action {
     width: 100%;
     min-height: 52px;
@@ -46,7 +48,7 @@
     align-items: center;
     gap: v.$space-xxs;
   }
-  
+
   &:hover {
     box-shadow: v.$shadow;
   }

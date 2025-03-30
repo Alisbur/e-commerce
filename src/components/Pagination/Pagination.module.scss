@@ -1,0 +1,44 @@
+@use "styles/variables" as v;
+@use "styles/mixins" as m;
+
+.pagination {
+  @include m.setFont(
+    $fontName: v.$secondary-font,
+    $fontSize: v.$fs-18,
+    $fontWeight: v.$fw-500,
+    $lineHeight: "180%",
+    $fontColor: v.$pagination-text-primary
+  );
+  display: flex;
+  gap: v.$space-pagination;
+
+  &__pages {
+    list-style: none;
+    display: flex;
+  }
+
+  &__page {
+    cursor: pointer;
+    width: 38px;
+    height: 42px;
+    display: grid;
+    place-content: center;
+
+    &_active {
+      color: v.$pagination-text-accent;
+      background-color: v.$pagination-bg-active;
+    }
+  }
+
+  &__arrow {
+    cursor: pointer;
+
+    &_left {
+      transform: scaleX(-1);
+    }
+
+    &_disabled {
+      color: v.$pagination-arrow-disabled;
+    }
+  }
+}

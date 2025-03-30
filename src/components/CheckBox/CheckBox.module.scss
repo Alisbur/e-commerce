@@ -1,4 +1,4 @@
-@use 'styles/variables' as v;
+@use "styles/variables" as v;
 
 .hiddenCheckbox {
   visibility: hidden;
@@ -13,14 +13,15 @@
   background-color: v.$checkbox-bg;
   border: 1px solid v.$checkbox-border;
   color: v.$checkbox-check;
-    
+
   &:has(.hiddenCheckbox:disabled) {
     color: v.$checkbox-check-disabled;
     background-color: v.$checkbox-bg-disabled;
     border: 1px solid v.$checkbox-border-disabled;
   }
 
-  &:hover, &:has(.hiddenCheckbox:focus) {
+  &:hover,
+  &:has(.hiddenCheckbox:focus) {
     background-color: v.$checkbox-bg-hover;
     border: 1px solid v.$checkbox-border-hover;
   }

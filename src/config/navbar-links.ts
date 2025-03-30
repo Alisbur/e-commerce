@@ -1,10 +1,10 @@
-import { routes } from "config/routes"
+import { routes } from 'config/routes';
 
 export type TNavBarLink = {
   id: number;
   caption: string;
   route: string;
-}
+};
 
 export const NAVBAR_LINKS: TNavBarLink[] = [
   {
@@ -15,11 +15,11 @@ export const NAVBAR_LINKS: TNavBarLink[] = [
   {
     id: 2,
     caption: 'Categories',
-    route: routes.product.mask,
+    route: routes.categories.mask,
   },
   {
     id: 3,
     caption: 'About Us',
-    route: routes.product.mask,
+    route: routes.about.mask,
   },
-]
+];

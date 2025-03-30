@@ -1,0 +1,30 @@
+@use "styles/variables" as v;
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 600px 1fr;
+  column-gap: v.$space-xxxl;
+  position: relative;
+  padding-bottom: v.$space-xs;
+}
+
+.image {
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-xxxl;
+
+  &__price {
+    margin-top: v.$space-xxl;
+  }
+
+  &__actions {
+    display: flex;
+    gap: v.$space-xxxl;
+  }
+}

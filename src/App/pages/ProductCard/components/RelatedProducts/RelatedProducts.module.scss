@@ -1,0 +1,12 @@
+@use "styles/variables" as v;
+@use "styles/mixins" as m;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-xxl;
+}
+
+.title {
+  @include m.setFont($lineHeight: v.$lh-48);
+}

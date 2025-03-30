@@ -29,14 +29,7 @@ export type MultiDropdownProps = {
   getTitle: (value: Option[]) => string;
 };
 
-const MultiDropdown: React.FC<MultiDropdownProps> = ({
-  className,
-  options,
-  value,
-  onChange,
-  disabled,
-  getTitle,
-}) => {
+const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, options, value, onChange, disabled, getTitle }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filteredItems, setFilteredItems] = useState<Option[]>(options);
   const [query, setQuery] = useState('');
@@ -68,17 +61,12 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   }, [isOpen]);
 
   useEffect(() => {
-    const newFilterItems = options.filter((el) =>
-      el.value.toLowerCase().includes(query.toLowerCase())
-    );
+    const newFilterItems = options.filter((el) => el.value.toLowerCase().includes(query.toLowerCase()));
     setFilteredItems(newFilterItems);
   }, [query, options]);
 
   return (
-    <div
-      className={cx(styles.multiDropdown, className)}
-      ref={inputRef}
-    >
+    <div className={cx(styles.multiDropdown, className)} ref={inputRef}>
       <Input
         value={!isOpen && value.length ? getTitle(value) : query}
         placeholder={getTitle(value)}
@@ -88,12 +76,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
             openDropdown();
           }
         }}
-        afterSlot={
-          <ArrowDownIcon
-            color="secondary"
-            onClick={() => (isOpen ? closeDropdown() : openDropdown())}
-          />
-        }
+        afterSlot={<ArrowDownIcon color="secondary" onClick={() => (isOpen ? closeDropdown() : openDropdown())} />}
         className={value.length && !isOpen ? styles.values : styles.empty}
         disabled={disabled}
       />
@@ -107,11 +90,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
                 key={item.key}
                 className={styles.option}
                 onClick={() => {
-                  onChange(
-                    !isSelected
-                      ? [...value, item]
-                      : value.filter((el) => el.key !== item.key)
-                  );
+                  onChange(!isSelected ? [...value, item] : value.filter((el) => el.key !== item.key));
                 }}
               >
                 <Text

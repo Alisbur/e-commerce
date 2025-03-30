@@ -18,7 +18,12 @@ const NavBarLinkComponent: FC<TNavBarLinkComponent> = ({ caption, route }) => {
         style={{ position: 'relative' }}
       >
         {({ isActive }) => (
-          <Text view="p-18" tag="span" color={isActive ? 'accent' : 'primary'} weight={isActive ? 'semibold' : 'normal'}>
+          <Text
+            view="p-18"
+            tag="span"
+            color={isActive ? 'accent' : 'primary'}
+            weight={isActive ? 'semibold' : 'normal'}
+          >
             {caption}
           </Text>
         )}
