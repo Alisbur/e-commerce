@@ -1,10 +1,10 @@
-@use "styles/variables" as v;
-@import "styles/Fonts/fonts.scss";
+@use "assets/Fonts/fonts" as *;
+@use "styles/variables" as *;
 
 html,
 body,
 ul {
-  font-family: v.$main-font;
+  font-family: $main-font, sans-serif;
   margin: 0;
   padding: 0;
 }

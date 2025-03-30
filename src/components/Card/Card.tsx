@@ -1,9 +1,7 @@
 import React, { MouseEvent } from 'react';
 import classNames from 'classnames';
 import styles from './Card.module.scss';
-import Text from '../Text';
-
-const cx = classNames.bind(styles);
+import Text from 'components/Text';
 
 export type CardProps = {
   /** Дополнительный classname */
@@ -40,7 +38,7 @@ const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <article className={cx(styles.card, className)} onClick={handleCardClick}>
+    <article className={classNames(styles.card, className)} onClick={handleCardClick}>
       <img src={image} className={styles.card__header_image} alt="Изображение" />
       <div className={styles.card__content}>
         <div className={styles.card__content_about}>

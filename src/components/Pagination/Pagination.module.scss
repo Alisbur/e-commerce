@@ -2,13 +2,6 @@
 @use "styles/mixins" as m;
 
 .pagination {
-  @include m.setFont(
-    $fontName: v.$secondary-font,
-    $fontSize: v.$fs-18,
-    $fontWeight: v.$fw-500,
-    $lineHeight: "180%",
-    $fontColor: v.$pagination-text-primary
-  );
   display: flex;
   gap: v.$space-pagination;
 
@@ -18,6 +11,13 @@
   }
 
   &__page {
+    @include m.setFont(
+      $fontName: v.$secondary-font,
+      $fontSize: v.$fs-18,
+      $fontWeight: v.$fw-500,
+      $lineHeight: "180%",
+      $fontColor: v.$pagination-text-primary
+    );
     cursor: pointer;
     width: 38px;
     height: 42px;

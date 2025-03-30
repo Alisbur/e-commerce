@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import Input from '../Input';
-import ArrowDownIcon from '../icons/ArrowDownIcon';
-import Text from '../Text';
+import Input from 'components/Input';
+import ArrowDownIcon from 'components/icons/ArrowDownIcon';
+import Text from 'components/Text';
 import styles from './MultiDropdown.module.scss';
-
-const cx = classNames.bind(styles);
 
 export type Option = {
   /** Ключ варианта, используется для отправки на бек/использования в коде */
@@ -66,7 +64,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, options, value
   }, [query, options]);
 
   return (
-    <div className={cx(styles.multiDropdown, className)} ref={inputRef}>
+    <div className={classNames(styles.multiDropdown, className)} ref={inputRef}>
       <Input
         value={!isOpen && value.length ? getTitle(value) : query}
         placeholder={getTitle(value)}
@@ -76,7 +74,13 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, options, value
             openDropdown();
           }
         }}
-        afterSlot={<ArrowDownIcon color="secondary" onClick={() => (isOpen ? closeDropdown() : openDropdown())} />}
+        afterSlot={
+          <ArrowDownIcon
+            color="secondary"
+            onClick={() => (isOpen ? closeDropdown() : openDropdown())}
+            className={styles.pointer}
+          />
+        }
         className={value.length && !isOpen ? styles.values : styles.empty}
         disabled={disabled}
       />
@@ -97,7 +101,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, options, value
                   view="p-16"
                   tag="div"
                   color={isSelected ? 'accent' : 'primary'}
-                  className={cx(styles.optionItem, isSelected && styles.selected)}
+                  className={classNames(styles.optionItem, { [styles.selected]: isSelected })}
                 >
                   {item.value}
                 </Text>

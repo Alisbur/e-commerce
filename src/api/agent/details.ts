@@ -1,18 +1,13 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+import { axiosInstance } from 'api/config/axios';
 import { TErrorResponse, TProductResponse } from 'entities/types/types';
-import { API_ROUTES } from 'config/api-routes';
-import { JWT } from 'api/constants/jwt';
-import { DEFAULT_ERROR } from 'api/constants/default-error';
+import { API_ROUTES } from 'api/config/api-routes';
+import { DEFAULT_ERROR } from 'api/config/default-error';
 
 export const getProductDetails = async (documentId: string, searchParams: string): Promise<TProductResponse> => {
   try {
-    const { data }: AxiosResponse<TProductResponse> = await axios.get<TProductResponse>(
+    const { data }: AxiosResponse<TProductResponse> = await axiosInstance.get<TProductResponse>(
       `${API_ROUTES.products}/${documentId}?${searchParams}`,
-      {
-        headers: {
-          Authorization: `Bearer ${JWT}`,
-        },
-      },
     );
     return data;
   } catch (e: unknown) {

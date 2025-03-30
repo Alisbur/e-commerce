@@ -1,10 +1,8 @@
 import React, { MouseEvent } from 'react';
 import classNames from 'classnames';
-import Loader from '../Loader';
-import Text from '../Text';
+import Loader from 'components/Loader';
+import Text from 'components/Text';
 import styles from './Button.module.scss';
-
-const cx = classNames.bind(styles);
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** Состояние загрузки */
@@ -33,11 +31,11 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={cx(
+      className={classNames(
         styles.button,
         styles[`button_${variant}`],
-        disabled && styles[`button_${variant}_disabled`],
-        loading && styles.noHover,
+        { [styles[`button_${variant}_disabled`]]: disabled },
+        { [styles.noHover]: loading },
         className,
       )}
       onClick={handleClick}

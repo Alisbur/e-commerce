@@ -2,8 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './Loader.module.scss';
 
-const cx = classNames.bind(styles);
-
 export type LoaderProps = {
   /** Размер */
   size?: 's' | 'm' | 'l';
@@ -25,7 +23,7 @@ const Loader: React.FC<LoaderProps> = ({ size = 'l', className }) => {
   }
 
   return (
-    <div className={cx(styles.loaderWrapper, styles[`loader-wrapper_${size}`], className)}>
+    <div className={classNames(styles.loaderWrapper, styles[`loader-wrapper_${size}`], className)}>
       <svg
         width={dim}
         height={dim}

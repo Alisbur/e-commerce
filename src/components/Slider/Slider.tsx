@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
 import { TProductImage } from 'entities/types/types';
 import styles from './Slider.module.scss';
 import ArrowSide from 'components/icons/ArrowSide';
@@ -10,9 +10,15 @@ type TSliderProps = {
 const Slider: FC<TSliderProps> = ({ images }) => {
   const [currentImage, setCurrentImage] = useState(0);
 
-  const handleNextImage = () => setCurrentImage(currentImage < images.length - 1 ? currentImage + 1 : 0);
+  const handleNextImage = useCallback(
+    () => setCurrentImage(currentImage < images.length - 1 ? currentImage + 1 : 0),
+    [images, currentImage],
+  );
 
-  const handlePrevImage = () => setCurrentImage(currentImage > 0 ? currentImage - 1 : images.length - 1);
+  const handlePrevImage = useCallback(
+    () => setCurrentImage(currentImage > 0 ? currentImage - 1 : images.length - 1),
+    [images, currentImage],
+  );
 
   if (!images || !Array.isArray(images) || !images.length) return null;
 

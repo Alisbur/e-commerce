@@ -1,25 +1,21 @@
-import { routes } from 'config/routes';
+import { PAGE_ROUTES } from 'config/routes';
 
 export type TNavBarLink = {
-  id: number;
   caption: string;
   route: string;
 };
 
 export const NAVBAR_LINKS: TNavBarLink[] = [
   {
-    id: 1,
     caption: 'Products',
-    route: routes.products.mask,
+    route: PAGE_ROUTES.products.mask,
   },
   {
-    id: 2,
     caption: 'Categories',
-    route: routes.categories.mask,
+    route: PAGE_ROUTES.categories.mask,
   },
   {
-    id: 3,
     caption: 'About Us',
-    route: routes.about.mask,
+    route: PAGE_ROUTES.about.mask,
   },
 ];

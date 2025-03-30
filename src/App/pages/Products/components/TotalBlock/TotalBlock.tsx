@@ -3,7 +3,7 @@ import styles from './TotalBlock.module.scss';
 import Text from 'components/Text';
 
 type TTotalProps = {
-  total: number | undefined;
+  total: number | undefined | null;
 };
 
 const TotalBlock: FC<TTotalProps> = ({ total }) => {

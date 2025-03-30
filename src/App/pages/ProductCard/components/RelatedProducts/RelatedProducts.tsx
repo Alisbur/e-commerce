@@ -7,15 +7,17 @@ import { getProductList } from 'api/agent/list';
 import Text from 'components/Text';
 import { useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils/cart';
+import { makeRelatedProductsParams } from 'api/utils';
 
 type TRelatedProductsProps = {
-  productDocunmentId: string;
+  productDocumentId: string;
   productCategoryDocumentId: string;
 };
 
-const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocunmentId, productCategoryDocumentId }) => {
+const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId }) => {
   const [relatedIsLoading, setrelatedIsLoading] = useState(false);
   const [related, setRelated] = useState<TProduct[]>([]);
+  const RELATED_ITEMS_QUANTITY = 3;
 
   const navigate = useNavigate();
 
@@ -24,26 +26,13 @@ const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocunmentId, produc
   };
 
   useEffect(() => {
-    if (productDocunmentId && productCategoryDocumentId) {
-      const relatedConfig = {
-        fields: ['title', 'description', 'price'],
-        populate: ['images', 'productCategory'],
-        pagination: {
-          limit: 3,
-        },
-        filters: {
-          productCategory: {
-            documentId: {
-              $eq: productCategoryDocumentId,
-            },
-          },
-          documentId: {
-            $ne: productDocunmentId,
-          },
-        },
-      };
-
-      const searchParams = qs.stringify(relatedConfig, { encode: false });
+    if (productDocumentId && productCategoryDocumentId) {
+      const serchConfig = makeRelatedProductsParams({
+        productCategoryDocumentId,
+        productDocumentId,
+        quantity: RELATED_ITEMS_QUANTITY,
+      });
+      const searchParams = qs.stringify(serchConfig, { encode: false });
       setrelatedIsLoading(true);
       getProductList(searchParams)
         .then((res: TProductListResponse) => {
@@ -54,7 +43,7 @@ const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocunmentId, produc
           setrelatedIsLoading(false);
         });
     }
-  }, [productDocunmentId, productCategoryDocumentId]);
+  }, [productDocumentId, productCategoryDocumentId]);
 
   return (
     <div className={styles.wrapper}>

@@ -2,8 +2,6 @@ import React, { ChangeEvent } from 'react';
 import classNames from 'classnames';
 import styles from './Input.module.scss';
 
-const cx = classNames.bind(styles);
-
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & {
   /** Значение поля */
   value: string;
@@ -20,7 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div className={cx(styles.inputWrapper, className)}>
+      <div className={classNames(styles.inputWrapper, className)}>
         <input
           type="text"
           ref={ref}

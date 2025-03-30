@@ -1,4 +1,4 @@
-export const routes = {
+export const PAGE_ROUTES = {
   main: {
     mask: '/',
     create: () => '/',

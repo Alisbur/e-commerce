@@ -2,8 +2,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 import styles from './Text.module.scss';
 
-const cx = classNames.bind(styles);
-
 export type TextProps = {
   /** Дополнительный класс */
   className?: string;
@@ -33,11 +31,11 @@ const Text: React.FC<TextProps> = ({ className, view, tag = 'p', weight, childre
 
   return (
     <Element
-      className={cx(
-        Boolean(view) && styles[`view_${view}`],
-        isClamped && styles.clamped,
-        Boolean(color) && styles[`text_${color}`],
-        Boolean(weight) && styles[`text_${weight}`],
+      className={classNames(
+        { [styles[`view_${view}`]]: view },
+        { [styles.clamped]: isClamped },
+        { [styles[`text_${color}`]]: color },
+        { [styles[`text_${weight}`]]: weight },
         className,
       )}
       style={extraStyles}

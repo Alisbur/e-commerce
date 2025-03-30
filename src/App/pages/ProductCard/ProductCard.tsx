@@ -10,6 +10,7 @@ import { TProduct, TProductResponse } from 'entities/types/types';
 import ProductDetails from './components/ProductDetails';
 import RelatedProducts from './components/RelatedProducts';
 import { handleAddToCart, handleBuyNow } from 'utils/cart';
+import { makeProductDetailsParams } from 'api/utils';
 
 const ProductCard = () => {
   const { documentId } = useParams();
@@ -19,11 +20,8 @@ const ProductCard = () => {
 
   useEffect(() => {
     if (documentId) {
-      const productConfig = {
-        fields: ['title', 'description', 'price'],
-        populate: ['images', 'productCategory'],
-      };
-      const searchParams = qs.stringify(productConfig, { encode: false });
+      const searchConfig = makeProductDetailsParams();
+      const searchParams = qs.stringify(searchConfig, { encode: false });
 
       setProductIsLoading(true);
       getProductDetails(documentId, searchParams)
@@ -37,24 +35,23 @@ const ProductCard = () => {
     }
   }, [documentId]);
 
+  const goBack = () => navigate(-1);
+
   return (
     <section className={styles.wrapper}>
       <div className={styles.content}>
-        <BackButton
-          caption="Назад"
-          onBack={() => {
-            navigate(-1);
-          }}
-        />
+        <BackButton caption="Назад" onBack={goBack} />
         {product && (
           <ProductDetails product={product} isLoading={productIsLoading}>
             <Button onClick={() => handleBuyNow(product.id)}>Buy Now</Button>
-            <Button onClick={() => handleAddToCart(product.id)} variant='white'>Add to Cart</Button>
+            <Button onClick={() => handleAddToCart(product.id)} variant="white">
+              Add to Cart
+            </Button>
           </ProductDetails>
         )}
         {product && (
           <RelatedProducts
-            productDocunmentId={documentId ?? ''}
+            productDocumentId={documentId ?? ''}
             productCategoryDocumentId={product.productCategory?.documentId ?? ''}
           />
         )}

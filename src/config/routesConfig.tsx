@@ -7,39 +7,39 @@ import Categories from 'App/pages/Categories';
 import AboutUs from 'App/pages/AboutUs';
 import Cart from 'App/pages/Cart';
 import Account from 'App/pages/Account';
-import { routes } from './routes';
+import { PAGE_ROUTES } from './routes';
 
 export const routesConfig: RouteObject[] = [
   {
-    path: routes.main.mask,
+    path: PAGE_ROUTES.main.mask,
     element: <App />,
     children: [
       {
-        path: routes.products.mask,
+        path: PAGE_ROUTES.products.mask,
         element: <Products />,
       },
       {
-        path: routes.product.mask,
+        path: PAGE_ROUTES.product.mask,
         element: <ProductCard />,
       },
       {
-        path: routes.categories.mask,
+        path: PAGE_ROUTES.categories.mask,
         element: <Categories />,
       },
       {
-        path: routes.about.mask,
+        path: PAGE_ROUTES.about.mask,
         element: <AboutUs />,
       },
       {
-        path: routes.cart.mask,
+        path: PAGE_ROUTES.cart.mask,
         element: <Cart />,
       },
       {
-        path: routes.account.mask,
+        path: PAGE_ROUTES.account.mask,
         element: <Account />,
       },
       {
-        path: routes.notFound.mask,
+        path: PAGE_ROUTES.notFound.mask,
         element: <NotFound />,
       },
     ],

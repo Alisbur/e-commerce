@@ -81,16 +81,16 @@ export type TProductListResponse = {
 
 export type TProductResponse = {
   data: TProduct;
-  meta?: object;
+  meta?: TMeta;
 };
 
 export type TProductCategoriesResponse = {
   data: TProductCategory[];
-  meta: TMeta;
+  meta?: TMeta;
 };
 
 export type TErrorResponse = {
-  data: object;
+  data: unknown;
   error: {
     status: number;
     name: string;

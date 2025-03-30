@@ -5,18 +5,12 @@ import { NavLink } from 'react-router';
 import Text from 'components/Text';
 import styles from './NavBarLink.module.scss';
 
-const cx = classNames.bind(styles);
-
 type TNavBarLinkComponent = Omit<TNavBarLink, 'id'>;
 
 const NavBarLinkComponent: FC<TNavBarLinkComponent> = ({ caption, route }) => {
   return (
     <div className={styles.linkWrapper}>
-      <NavLink
-        to={route}
-        className={({ isActive }) => (isActive ? cx(styles.link, styles.link_active) : styles.link)}
-        style={{ position: 'relative' }}
-      >
+      <NavLink to={route} className={({ isActive }) => classNames(styles.link, { [styles.link_active]: isActive })}>
         {({ isActive }) => (
           <Text
             view="p-18"

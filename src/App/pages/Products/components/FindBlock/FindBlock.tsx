@@ -32,13 +32,7 @@ const FindBlock: FC<TFindBlockProps> = ({
           onChange={onSearchStringChange}
           placeholder={!searchString ? 'Search product' : ''}
         />
-        <Button
-          onClick={() => {
-            onFind();
-          }}
-        >
-          Find now
-        </Button>
+        <Button onClick={onFind}>Find now</Button>
       </div>
       <MultiDropdown
         className={styles.filter}

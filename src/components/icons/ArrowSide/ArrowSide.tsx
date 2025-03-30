@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styles from './ArrowSide.module.scss';
-import Icon, { IconProps } from '../Icon';
+import Icon, { IconProps } from 'components/icons/Icon';
 
 type TArrowSideProps = IconProps & { side?: 'left' | 'right' };
 

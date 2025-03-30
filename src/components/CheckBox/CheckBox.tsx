@@ -1,9 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import CheckIcon from '../icons/CheckIcon';
+import CheckIcon from 'components/icons/CheckIcon';
 import styles from './CheckBox.module.scss';
-
-const cx = classNames.bind(styles);
 
 export type CheckBoxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> & {
   /** Вызывается при клике на чекбокс */
@@ -16,7 +14,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({ onChange, checked = false, disabled
       {!!checked && <CheckIcon width={40} height={40} className={styles.checkIcon} />}
       <input
         type="checkbox"
-        className={cx(styles.hiddenCheckbox, className)}
+        className={classNames(styles.hiddenCheckbox, className)}
         defaultChecked={checked}
         disabled={disabled}
         style={{ visibility: 'hidden' }}
