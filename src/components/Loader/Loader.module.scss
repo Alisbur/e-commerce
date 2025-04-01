@@ -1,0 +1,38 @@
+@use "styles/variables" as v;
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loaderWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  color: v.$loader-bg;
+}
+
+.loaderWrapper_l {
+  width: 60px;
+  height: 60px;
+}
+
+.loaderWrapper_m {
+  width: 48px;
+  height: 48px;
+}
+
+.loaderWrapper_s {
+  width: 24px;
+  height: 24px;
+}
+
+.animation {
+  animation: rotation 1s linear infinite;
+}

@@ -1,0 +1,54 @@
+@use "styles/variables" as v;
+@use "styles/mixins" as m;
+
+.inputWrapper {
+  width: 100%;
+  height: 52px;
+  padding: v.$space-s v.$space-xs;
+  gap: v.$space-xxs;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: v.$input-bg;
+  color: v.$text-secondary;
+  border: 1px solid v.$input-border;
+}
+
+.inputWrapper input {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: transparent;
+  @include m.setFont(
+    $fontName: v.$main-font,
+    $fontSize: v.$fs-16,
+    $fontWeight: v.$fw-400,
+    $lineHeight: v.$lh-20,
+    $letterSpacing: v.$ls-0,
+    $fontColor: v.$input-text
+  );
+  border: 1px solid v.$input-border;
+  outline: none;
+}
+
+.inputWrapper input::placeholder {
+  color: v.$input-placeholder;
+}
+
+.inputWrapper input:disabled {
+  color: v.$input-text-disabled;
+}
+
+.inputWrapper:has(input:disabled) {
+  border: 1px solid v.$input-border-disabled;
+  background-color: v.$input-bg-disabled;
+}
+
+.inputWrapper input:focus {
+  color: v.$input-text-focus;
+}
+
+.input-wrapper:has(input:focus) {
+  border: 1px solid v.$input-border-focus;
+  background-color: v.$input-bg-focus;
+}

@@ -1,0 +1,17 @@
+@use "styles/variables" as v;
+
+.icon {
+  color: inherit;
+
+  &_primary {
+    color: v.$text-primary;
+  }
+
+  &_secondary {
+    color: v.$text-secondary;
+  }
+
+  &_accent {
+    color: v.$text-accent;
+  }
+}

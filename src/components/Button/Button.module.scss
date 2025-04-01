@@ -1,0 +1,61 @@
+@use "styles/variables" as v;
+
+.button {
+  height: 52px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$space-xxs;
+  outline: none;
+  padding: v.$space-button-v v.$space-button-h;
+  border-radius: v.$border-radius;
+  flex-shrink: 0;
+  cursor: pointer;
+
+  &_brand {
+    background-color: v.$brand;
+    color: v.$button-primary-text;
+    border: none;
+
+    &:hover {
+      background-color: v.$brand-hover;
+    }
+
+    &:active {
+      background-color: v.$brand-active;
+    }
+
+    &_disabled {
+      pointer-events: none;
+      background-color: #d9d9d9;
+    }
+  }
+
+  &_white {
+    background-color: v.$button-white-bg;
+    color: v.$button-white-primary-text;
+    border: 1px solid v.$button-white-border;
+
+    &:hover {
+      background-color: v.$button-white-bg-hover;
+    }
+
+    &:active {
+      background-color: v.$button-white-bg-active;
+    }
+
+    &_disabled {
+      pointer-events: none;
+      background-color: v.$button-white-bg-disabled;
+    }
+  }
+}
+
+.loader {
+  color: inherit;
+}
+
+.noHover {
+  pointer-events: none;
+}

@@ -1,0 +1,22 @@
+@use "styles/variables" as v;
+
+.linkWrapper {
+  height: 90px;
+  padding-top: 32px;
+}
+
+.link {
+  position: relative;
+  text-decoration: none;
+
+  &_active::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    transform: translateY(35px);
+    height: 2px;
+    background-color: v.$text-accent;
+  }
+}

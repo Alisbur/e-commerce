@@ -1,0 +1,10 @@
+@use "styles/variables" as v;
+
+.wrapper {
+  cursor: pointer;
+  padding: v.$space-backbutton-v v.$space-backbutton-h v.$space-backbutton-v 0;
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: v.$space-xs;
+}

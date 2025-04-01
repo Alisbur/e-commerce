@@ -1,0 +1,77 @@
+@use "styles/variables" as v;
+@use "styles/mixins" as m;
+
+.view_button,
+.view_title,
+.view_p-20,
+.view_p-18,
+.view_p-16,
+.view_p-14 {
+  @include m.setFont($fontName: v.$main-font, $fontWeight: v.$fw-400, $letterSpacing: v.$ls-0);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+}
+
+.view_button {
+  @include m.setFont($fontSize: v.$fs-18, $lineHeight: v.$lh-18);
+}
+
+.view_title {
+  @include m.setFont($fontSize: v.$fs-44, $fontWeight: v.$fw-700, $lineHeight: v.$lh-48);
+}
+
+.view_subtitle {
+  @include m.setFont($fontSize: v.$fs-32, $fontWeight: v.$fw-700, $lineHeight: v.$lh-36);
+}
+
+.view_p-20 {
+  @include m.setFont($fontSize: v.$fs-20, $lineHeight: v.$lh-24);
+}
+
+.view_p-18 {
+  @include m.setFont($fontSize: v.$fs-18, $lineHeight: v.$lh-22);
+}
+
+.view_p-16 {
+  @include m.setFont($fontSize: v.$fs-16, $lineHeight: v.$lh-20);
+}
+
+.view_p-14 {
+  @include m.setFont($fontSize: v.$fs-14, $lineHeight: v.$lh-18);
+}
+
+.clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.text {
+  &_primary {
+    color: v.$text-primary;
+  }
+
+  &_secondary {
+    color: v.$text-secondary;
+  }
+
+  &_accent {
+    color: v.$text-accent;
+  }
+
+  &_normal {
+    @include m.setFont($fontWeight: v.$fw-400);
+  }
+
+  &_medium {
+    @include m.setFont($fontWeight: v.$fw-500);
+  }
+
+  &_semibold {
+    @include m.setFont($fontWeight: v.$fw-600);
+  }
+
+  &_bold {
+    @include m.setFont($fontWeight: v.$fw-700);
+  }
+}
