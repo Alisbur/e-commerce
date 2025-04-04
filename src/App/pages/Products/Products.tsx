@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import styles from './Products.module.scss';
-import { getProductList } from 'api/agent/list';
 import TitleBlock from 'components/TitleBlock';
 import FindBlock from './components/FindBlock/FindBlock';
 import { FILTER_OPTIONS } from './constants/constants';
-import { TProduct, TProductListResponse } from 'entities/types/types';
 import TotalBlock from './components/TotalBlock';
 import Pagination from 'components/Pagination';
 import ProductCardsList from 'components/ProductCardsList';
@@ -12,47 +10,34 @@ import { useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils/cart';
 import { makeProductsListSearchParams } from 'api/utils';
 import { PAGE_ROUTES } from 'config/routes';
+import { useLocalStore } from 'utils/useLocalStore';
+import ProductsListStore from 'store/ProductsListStore';
+import { RequestStatus } from 'utils/requestStatus';
+import { observer } from 'mobx-react-lite';
+import CategoriesListStore from 'store/CategoriesListStore';
 
 export type TFilterOption = { key: string; value: string };
 
-type TPagination = {
-  page?: number | null;
-  pageSize?: number | null;
-  pageCount?: number | null;
-  total?: number | null;
-};
-
-const paginationInitValue = {
-  page: null,
-  pageSize: null,
-  pageCount: null,
-  total: null,
-};
-
 const ITEMS_PER_PAGE = 9;
 
-const Products = () => {
+const ProductsList = () => {
   const [searchString, setSearchString] = useState('');
   const [filterValue, setFilterValue] = useState<TFilterOption[]>([]);
-  const [products, setProducts] = useState<TProduct[]>([]);
-  const [pagination, setPagination] = useState<TPagination>(paginationInitValue);
-  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
+
+  const productsStore = useLocalStore(() => new ProductsListStore());
+  const categoriesStore = useLocalStore(() => new CategoriesListStore());
 
   useEffect(() => {
     const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
+    productsStore.downloadProductList({ searchParams });
+  }, [productsStore]);
 
-    setIsLoading(true);
-    getProductList({ searchParams })
-      .then((res: TProductListResponse) => {
-        setProducts(res.data);
-        setPagination(res.meta.pagination);
-      })
-      .catch((err: string) => console.log(err))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  useEffect(() => {
+    const searchParams = '';
+    categoriesStore.downloadCategoriesList({ searchParams });
+  }, [categoriesStore]);
 
   //Получение значения для фильтра
   const getTitle = useMemo(() => {
@@ -71,7 +56,7 @@ const Products = () => {
   const handlePrevPage = () => {};
 
   //Заглушка для перехода к указанной странице пагинации
-  const handleNGotoPage = (n: number) => n;
+  const handleNGoToPage = (n: number) => n;
 
   //Заглушка для поиска
   const handleSearch = () => {};
@@ -96,27 +81,29 @@ const Products = () => {
           getTitle={getTitle}
           onFind={handleSearch}
         />
-        <TotalBlock total={pagination.total} />
+        <TotalBlock total={productsStore.pagination?.total ?? 0} />
         <ProductCardsList
-          products={products}
+          products={productsStore.productsList}
           addToCart={handleAddToCart}
           onCardClick={handleCardClick}
           paginationSlot={
-            pagination.pageCount && pagination.pageCount > 1 ? (
+            productsStore.pagination?.pageCount && productsStore.pagination.pageCount > 1 ? (
               <Pagination
-                page={pagination.page}
-                pageCount={pagination.pageCount}
+                page={productsStore.pagination?.page}
+                pageCount={productsStore.pagination?.pageCount}
                 next={handleNextPage}
                 prev={handlePrevPage}
-                goTo={handleNGotoPage}
+                goTo={handleNGoToPage}
               />
             ) : undefined
           }
-          isLoading={isLoading}
+          isLoading={productsStore.requestStatus === RequestStatus.loading}
         />
       </div>
     </main>
   );
 };
+
+const Products = observer(ProductsList);
 
 export default Products;

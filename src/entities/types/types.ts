@@ -88,13 +88,3 @@ export type TProductCategoriesResponse = {
   data: TProductCategory[];
   meta?: TMeta;
 };
-
-export type TErrorResponse = {
-  data: unknown;
-  error: {
-    status: number;
-    name: string;
-    message: string;
-    details: unknown;
-  };
-};

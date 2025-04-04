@@ -1,13 +1,15 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import styles from './RelatedProducts.module.scss';
 import ProductCardsList from 'components/ProductCardsList';
-import { TProduct, TProductListResponse } from 'entities/types/types';
-import { getProductList } from 'api/agent/list';
 import Text from 'components/Text';
 import { useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils/cart';
 import { makeRelatedProductsSearchParams } from 'api/utils';
 import { PAGE_ROUTES } from 'config/routes';
+import ProductsListStore from 'store/ProductsListStore';
+import { useLocalStore } from 'utils/useLocalStore';
+import { RequestStatus } from 'utils/requestStatus';
+import { observer } from 'mobx-react-lite';
 
 type TRelatedProductsProps = {
   productDocumentId: string;
@@ -16,9 +18,8 @@ type TRelatedProductsProps = {
 
 const RELATED_ITEMS_QUANTITY = 3;
 
-const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId }) => {
-  const [relatedIsLoading, setrelatedIsLoading] = useState(false);
-  const [related, setRelated] = useState<TProduct[]>([]);
+const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId }) => {
+  const relatedStore = useLocalStore(() => new ProductsListStore());
 
   const navigate = useNavigate();
 
@@ -34,15 +35,7 @@ const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocumentId, product
         quantity: RELATED_ITEMS_QUANTITY,
       });
 
-      setrelatedIsLoading(true);
-      getProductList({ searchParams })
-        .then((res: TProductListResponse) => {
-          setRelated(res.data);
-        })
-        .catch((err: string) => console.log(err))
-        .finally(() => {
-          setrelatedIsLoading(false);
-        });
+      relatedStore.downloadProductList({searchParams});
     }
   }, [productDocumentId, productCategoryDocumentId]);
 
@@ -52,13 +45,15 @@ const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocumentId, product
         Related Items
       </Text>
       <ProductCardsList
-        products={related}
+        products={relatedStore.productsList}
         addToCart={handleAddToCart}
         onCardClick={handleCardClick}
-        isLoading={relatedIsLoading}
+        isLoading={relatedStore.requestStatus === RequestStatus.loading}
       />
     </div>
   );
 };
+
+const RelatedProducts = observer(RelatedProductsList);
 
 export default RelatedProducts;

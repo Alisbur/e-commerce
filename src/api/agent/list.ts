@@ -1,26 +1,30 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { axiosInstance } from 'api/config/axios';
-import { TErrorResponse, TProductListResponse } from 'entities/types/types';
-import { API_ROUTES } from 'api/config/api-routes';
 import { DEFAULT_ERROR } from 'api/config/default-error';
+import { TResponse } from 'api/types/types';
+import { TErrorResponseApi } from 'api/types/types';
 
-export const getProductList = async ({ searchParams }: { searchParams: string }): Promise<TProductListResponse> => {
+export const getItemsList = async <T>({
+  route,
+  searchParams,
+}: {
+  route: string;
+  searchParams: string;
+}): Promise<TResponse<T>> => {
   try {
-    const { data }: AxiosResponse<TProductListResponse> = await axiosInstance.get<TProductListResponse>(
-      API_ROUTES.products,
-      {
-        params: { s: searchParams },
-        paramsSerializer: ({ s }) => s,
-      },
-    );
-    return data;
+    const { data }: AxiosResponse<T> = await axiosInstance.get<T>(route, {
+      params: { s: searchParams },
+      paramsSerializer: ({ s }) => s,
+    });
+    return { data, error: null };
   } catch (e: unknown) {
     if (e instanceof AxiosError && e.response !== undefined) {
-      const { error }: TErrorResponse = e.response.data as TErrorResponse;
-      const errorMessage = `${error.status} ${error.name}. ${error.message}.`;
-      throw new Error(errorMessage);
-    } else {
-      throw new Error(DEFAULT_ERROR);
+      const error: TErrorResponseApi = e.response.data as TErrorResponseApi;
+      return { error, data: null };
     }
+    return {
+      error: { error: DEFAULT_ERROR },
+      data: null,
+    };
   }
 };

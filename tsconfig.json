@@ -11,7 +11,8 @@
       "assets/*": ["assets/*"],
       "entities/*": ["entities/*"],
       "api/*": ["api/*"],
-      "App/*": ["App/*"]
+      "App/*": ["App/*"],
+      "store/*": ["store/*"]
     }
   }
 }

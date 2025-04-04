@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import 'styles/index.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import { StrictMode } from 'react';
+import '../configureMobX';
 
 const router = createBrowserRouter(routesConfig);
 

@@ -1,13 +1,13 @@
 import { FC, ReactNode } from 'react';
-import { TProduct } from 'entities/types/types';
 import styles from './ProductCardsList.module.scss';
 import Card from 'components/Card';
 import Button from 'components/Button';
 import Loader from 'components/Loader';
 import Text from 'components/Text';
+import { TProductModel } from 'store/models';
 
 type ProductCardsListProps = {
-  products: TProduct[];
+  products: TProductModel[];
   addToCart: (id: number) => void;
   onCardClick: (documentId: string) => void;
   paginationSlot?: ReactNode;
@@ -40,7 +40,7 @@ const ProductCardsList: FC<ProductCardsListProps> = ({
   return (
     <section className={styles.wrapper}>
       <div className={styles.products}>
-        {products.map((p: TProduct) => (
+        {products.map((p: TProductModel) => (
           <Card
             key={p.id}
             image={p.images && p.images[0].formats?.small?.url ? p.images[0].formats?.small?.url : ''}
