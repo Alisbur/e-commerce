@@ -32,9 +32,9 @@ const convertCategoryToFilterOption = (category: TProductCategoryModel): TFilter
 const ITEMS_PER_PAGE = 9;
 
 const Products = observer(() => {
-  const [searchString, setSearchString] = useState('');
-  const [filterValue, setFilterValue] = useState<TFilterOption[]>([]);
-  const [searchP, setSearchP] = useSearchParams();
+  // const [searchString, setSearchString] = useState('');
+  // const [filterValue, setFilterValue] = useState<TFilterOption[]>([]);
+  // const [searchP, setSearchP] = useSearchParams();
 
   const navigate = useNavigate();
   const { search } = useLocation();
@@ -42,19 +42,44 @@ const Products = observer(() => {
   const productsStore = useLocalStore(() => new ProductsListStore());
   const categoriesStore = useLocalStore(() => new CategoriesListStore());
   const { categoriesList } = categoriesStore;
-  const { setSearch, queryString, setParamEntity, setQueryString, getSearch, getParam, removeParamEntities } = rootStore.query;
+  const {
+    setSearch,
+    // queryString,
+    setParamEntity,
+    // setQueryString,
+    getSearch,
+    // getParam,
+    // removeParamEntities,
+    searchString,
+    setSearchString,
+    filterValue,
+    setFilterValue,
+  } = rootStore.query;
+
+  // useEffect(() => {
+  //   if (getSearch !== undefined) {
+  //     if(!getSearch) {
+  //       const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
+  //       setSearch(searchParams);
+  //       console.log("SETSEARCH В USE EFFECT", search)
+  //     }
+  //   }
+  // }, []);
 
   useEffect(() => {
-    if (!search) {
-      const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
-      setSearch(searchParams);
-    } else {
+    if (search !== undefined) {
+      if(!search) {
+        const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
+        setSearch(searchParams);
+      } else {
       setSearch(search);
-    }
+      console.log("SETSEARCH В USE EFFECT", search)
+    }}
   }, [search]);
 
+
   useEffect(() => {
-    if(!categoriesList.length) {
+    if (!categoriesList.length) {
       const searchParams = '';
       categoriesStore.downloadCategoriesList({ searchParams });
     }
@@ -70,6 +95,7 @@ const Products = observer(() => {
     if (newSearchString) {
       // navigate({ search: newSearchString});
       setSearchP(`?${newSearchString}`);
+      console.log("SETSEARCH В USE EFFECT3")
     }
   }, [filterValue]);
 
@@ -85,14 +111,14 @@ const Products = observer(() => {
 
   //Заглушка для перехода к указанной странице пагинации
   const handleGoToPage = (n: number) => {
-    const paginationSearchParams = makePaginationParams(n);
+    const paginationSearchParams = makePaginationParams(n, ITEMS_PER_PAGE);
     const newSearchString = setParamEntity('pagination', paginationSearchParams);
     navigate({ search: newSearchString });
   };
 
   //Заглушка для поиска
   const handleSearch = () => {
-    const querySearchParams = makeSearchQueryParams(queryString);
+    const querySearchParams = makeSearchQueryParams(searchString);
     const newSearchString = setParamEntity('filters', querySearchParams);
     navigate({ search: newSearchString });
     // setSearchP(`?${newSearchString}`);
@@ -102,6 +128,10 @@ const Products = observer(() => {
     navigate(PAGE_ROUTES.product.create(documentId));
   };
 
+  const setVal = (v: TFilterOption[]) => {
+    setFilterValue(v);
+  }
+
   return (
     <main className={styles.wrapper}>
       <div className={styles.content}>
@@ -110,11 +140,11 @@ const Products = observer(() => {
           name of the item
         </TitleBlock>
         <FindBlock
-          searchString={queryString}
-          onSearchStringChange={setQueryString}
+          searchString={searchString}
+          onSearchStringChange={setSearchString}
           filterOptions={[...categoriesList.map((c) => convertCategoryToFilterOption(c)), ...FILTER_OPTIONS]}
           filterValue={filterValue}
-          onFilterChange={setFilterValue}
+          onFilterChange={setVal}
           getTitle={getTitle}
           onFind={handleSearch}
         />

@@ -1,7 +1,8 @@
+import { TFilterOption } from 'App/pages/Products';
 import { action, computed, makeObservable, observable, toJS } from 'mobx';
 import qs, { ParsedQs } from 'qs';
 
-type PrivateFields = '_params' | '_search' | '_queryString' | '_selectedCategories';
+type PrivateFields = '_params' | '_search' | '_searchString' | '_selectedCategories' | '_filterValue';
 
 
 const getQueryStringFromSearch = (searchParams: Record<string, any>): string => {
@@ -24,8 +25,9 @@ const getSelectedCategoriesFromSearch = (searchParams: Record<string, any>): str
 };
 
 export default class QueryParamsStore {
-  private _queryString: string = '';
+  private _searchString: string = '';
   private _selectedCategories: string[] = [];
+  private _filterValue: TFilterOption[] = [];
   private _params: ParsedQs = {};
   private _search: string = '';
 
@@ -33,17 +35,20 @@ export default class QueryParamsStore {
     makeObservable<QueryParamsStore, PrivateFields>(this, {
       _params: observable.ref,
       _search: observable,
-      _queryString: observable,
+      _searchString: observable,
       _selectedCategories: observable,
+      _filterValue: observable.ref,
       getSearch: computed,
-      getParam: action,
+      searchString: computed,
       selectedCategories: computed,
-      setSelectedCategories: action,
-      setQueryString: action,
+      filterValue: computed,
+      getParam: action,
+      // setSelectedCategories: action,
+      setSearchString: action,
       setSearch: action,
       setParamEntity: action,
-      queryString: computed,
       removeParamEntities: action,
+      setFilterValue: action,
     });
   }
 
@@ -77,25 +82,34 @@ export default class QueryParamsStore {
     return this._search;
   }
 
-  get queryString() {
-    return this._queryString;
+  get searchString() {
+    return this._searchString;
   }
 
   get selectedCategories() {
     return this._selectedCategories;
   }
 
+  get filterValue() {
+    return this._filterValue;
+  }
+
+
   getParam = (key: string): string | ParsedQs | (string | ParsedQs)[] | null | undefined => {
     return this._params[key];
   };
 
-  setQueryString = (s: string) => {
-    this._queryString = s;
+  setSearchString = (s: string) => {
+    this._searchString = s;
   };
 
-  setSelectedCategories = (categories: string[]) => {
-    this._selectedCategories = categories;
-  };
+  // setSelectedCategories = (categories: string[]) => {
+  //   this._selectedCategories = categories;
+  // };
+
+  setFilterValue = (fw: TFilterOption[]) => {
+    this._filterValue = fw;
+  }
 
   setSearch = (search: string) => {
     search = search.startsWith('?') ? search.slice(1) : search;
@@ -107,8 +121,8 @@ export default class QueryParamsStore {
       console.log('SEARCH: ', this._search);
       console.log('PARAMS: ', toJS(this._params));
     }
-    this._queryString = getQueryStringFromSearch(this._params);
-    console.log('queryString', this._queryString);
+    this._searchString = getQueryStringFromSearch(this._params);
+    console.log('queryString', this._searchString);
     this._selectedCategories = getSelectedCategoriesFromSearch(this._params);
     console.log('selectedCats', this._selectedCategories);
   };
