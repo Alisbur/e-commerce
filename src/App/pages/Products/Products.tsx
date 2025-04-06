@@ -6,28 +6,31 @@ import { FILTER_OPTIONS } from './constants/constants';
 import TotalBlock from './components/TotalBlock';
 import Pagination from 'components/Pagination';
 import ProductCardsList from 'components/ProductCardsList';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { handleAddToCart } from 'utils/cart';
 import { makeProductsListSearchParams } from 'api/utils';
 import { PAGE_ROUTES } from 'config/routes';
 import { useLocalStore } from 'utils/useLocalStore';
-import ProductsListStore from 'store/ProductsListStore';
+import ProductsListStore from 'store/local/ProductsListStore';
 import { RequestStatus } from 'utils/requestStatus';
 import { observer } from 'mobx-react-lite';
-import CategoriesListStore from 'store/CategoriesListStore';
+import CategoriesListStore from 'store/local/CategoriesListStore';
+// import rootStore from 'store/RootStore';
 
 export type TFilterOption = { key: string; value: string };
 
 const ITEMS_PER_PAGE = 9;
 
-const ProductsList = () => {
+const Products = observer(() => {
   const [searchString, setSearchString] = useState('');
   const [filterValue, setFilterValue] = useState<TFilterOption[]>([]);
+  const [searchP, setSearchP] = useSearchParams();
 
   const navigate = useNavigate();
 
   const productsStore = useLocalStore(() => new ProductsListStore());
   const categoriesStore = useLocalStore(() => new CategoriesListStore());
+  // const { setSearch } = rootStore.query;
 
   useEffect(() => {
     const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
@@ -74,7 +77,7 @@ const ProductsList = () => {
         </TitleBlock>
         <FindBlock
           searchString={searchString}
-          onSearchStringChange={setSearchString}
+          onSearchStringChange={(s) => {setSearchString(s); setSearchP({search: s})}}
           filterOptions={FILTER_OPTIONS}
           filterValue={filterValue}
           onFilterChange={setFilterValue}
@@ -102,8 +105,6 @@ const ProductsList = () => {
       </div>
     </main>
   );
-};
-
-const Products = observer(ProductsList);
+});
 
 export default Products;

@@ -8,7 +8,7 @@ import ProductDetails from './components/ProductDetails';
 import RelatedProducts from './components/RelatedProducts';
 import { handleAddToCart, handleBuyNow } from 'utils/cart';
 import { makeProductDetailsSearchParams } from 'api/utils';
-import ProductDetailsStore from 'store/ProductDetailsStore';
+import ProductDetailsStore from 'store/local/ProductDetailsStore';
 import { useLocalStore } from 'utils/useLocalStore';
 import { RequestStatus } from 'utils/requestStatus';
 import { observer } from 'mobx-react-lite';

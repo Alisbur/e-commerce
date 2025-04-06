@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils/cart';
 import { makeRelatedProductsSearchParams } from 'api/utils';
 import { PAGE_ROUTES } from 'config/routes';
-import ProductsListStore from 'store/ProductsListStore';
+import ProductsListStore from 'store/local/ProductsListStore';
 import { useLocalStore } from 'utils/useLocalStore';
 import { RequestStatus } from 'utils/requestStatus';
 import { observer } from 'mobx-react-lite';

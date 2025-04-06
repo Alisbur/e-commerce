@@ -1,13 +1,14 @@
 import { getItemsList } from 'api/agent';
 import { API_ROUTES } from 'api/config/api-routes';
 import { TResponse } from 'api/types/types';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction, runInAction } from 'mobx';
 import {
   normalizeProductListResponse,
   TProductListResponseApi,
   TProductListResponseModel,
   TProductModel,
 } from 'store/models';
+import rootStore from 'store/RootStore';
 import { RequestStatus } from 'utils/requestStatus';
 import { ILocalStore } from 'utils/useLocalStore';
 
@@ -63,7 +64,7 @@ export default class ProductsListStore implements ILocalStore {
       if (response.error) {
         this._requestStatus = RequestStatus.error;
         //TODO: Убрать
-        console.log(response.error);
+        console.log(response.error.error.status, response.error.error.status);
         return;
       }
 
@@ -76,5 +77,17 @@ export default class ProductsListStore implements ILocalStore {
     });
   }
 
-  destroy(): void {}
+  destroy(): void {
+    this._qpReaction();
+  }
+  
+  private readonly _qpReaction: IReactionDisposer = reaction(
+    () => {
+      console.log("REACTION STARTS");
+      return rootStore.query.getParam('search');
+    },
+    (search) => {
+      console.log("search value change", search);
+    }
+  );
 }
