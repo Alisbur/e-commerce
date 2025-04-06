@@ -1,4 +1,4 @@
-import { makeSearchParams } from 'utils/makeSearchParams';
+import { makeSearchParams } from "./makeSearchParams";
 
 export const makeRelatedProductsSearchParams = ({
   productCategoryDocumentId,

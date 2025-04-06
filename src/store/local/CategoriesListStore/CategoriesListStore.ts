@@ -7,8 +7,8 @@ import {
   TProductCategoriesResponseModel,
   TProductCategoryModel,
 } from 'store/models';
-import { RequestStatus } from 'utils/requestStatus';
-import { ILocalStore } from 'utils/useLocalStore';
+import { RequestStatus } from 'utils';
+import { ILocalStore } from 'utils';
 import { API_ROUTES } from 'api/config/api-routes';
 
 type Pagination = {
@@ -61,8 +61,7 @@ export default class CategoriesListStore implements ILocalStore {
     runInAction(() => {
       if (response.error) {
         this._requestStatus = RequestStatus.error;
-        //TODO: Убрать
-        console.log(response.error);
+        console.log(response.error.error.status, response.error.error.details);
         return;
       }
 

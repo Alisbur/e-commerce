@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router';
 import styles from './App.module.scss';
 import NavBar from 'components/NavBar';
-import { useQueryParamsStoreInit } from 'store/RootStore/hooks/useQueryParamsStoreInit';
+// import { useQueryParamsStoreInit } from 'store/RootStore/hooks/useQueryParamsStoreInit';
 
 function App() {
-  useQueryParamsStoreInit();
+  // useQueryParamsStoreInit();
 
   return (
     <div className={styles.app}>

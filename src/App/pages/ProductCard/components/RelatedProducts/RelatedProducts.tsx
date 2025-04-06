@@ -3,12 +3,12 @@ import styles from './RelatedProducts.module.scss';
 import ProductCardsList from 'components/ProductCardsList';
 import Text from 'components/Text';
 import { useNavigate } from 'react-router';
-import { handleAddToCart } from 'utils/cart';
-import { makeRelatedProductsSearchParams } from 'api/utils';
+import { handleAddToCart } from 'utils';
+import { makeRelatedProductsSearchParams } from 'store/RootStore/utils';
 import { PAGE_ROUTES } from 'config/routes';
 import ProductsListStore from 'store/local/ProductsListStore';
-import { useLocalStore } from 'utils/useLocalStore';
-import { RequestStatus } from 'utils/requestStatus';
+import { useLocalStore } from 'utils';
+import { RequestStatus } from 'utils';
 import { observer } from 'mobx-react-lite';
 
 type TRelatedProductsProps = {
@@ -35,7 +35,7 @@ const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, pro
         quantity: RELATED_ITEMS_QUANTITY,
       });
 
-      relatedStore.downloadProductList({searchParams});
+      relatedStore.downloadProductList({ searchParams });
     }
   }, [productDocumentId, productCategoryDocumentId]);
 

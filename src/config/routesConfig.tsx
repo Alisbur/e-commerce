@@ -1,7 +1,7 @@
 import { RouteObject } from 'react-router';
 import App from 'App/App';
 import Products from 'App/pages/Products';
-import ProductCard from 'App/pages/ProductCard/ProductCard';
+import ProductCard from 'App/pages/ProductCard';
 import NotFound from 'App/pages/NotFound';
 import Categories from 'App/pages/Categories';
 import AboutUs from 'App/pages/AboutUs';

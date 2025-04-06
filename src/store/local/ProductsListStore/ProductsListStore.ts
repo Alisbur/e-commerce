@@ -9,8 +9,8 @@ import {
   TProductModel,
 } from 'store/models';
 import rootStore from 'store/RootStore';
-import { RequestStatus } from 'utils/requestStatus';
-import { ILocalStore } from 'utils/useLocalStore';
+import { RequestStatus } from 'utils';
+import { ILocalStore } from 'utils';
 
 type Pagination = {
   page: number | null;
@@ -63,7 +63,6 @@ export default class ProductsListStore implements ILocalStore {
     runInAction(() => {
       if (response.error) {
         this._requestStatus = RequestStatus.error;
-        //TODO: Убрать
         console.log(response.error.error.status, response.error.error.status);
         return;
       }

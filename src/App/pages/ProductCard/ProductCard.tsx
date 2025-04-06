@@ -6,11 +6,11 @@ import BackButton from 'components/BackButton';
 import Button from 'components/Button';
 import ProductDetails from './components/ProductDetails';
 import RelatedProducts from './components/RelatedProducts';
-import { handleAddToCart, handleBuyNow } from 'utils/cart';
-import { makeProductDetailsSearchParams } from 'api/utils';
+import { handleAddToCart, handleBuyNow } from 'utils';
+import { makeProductDetailsSearchParams } from 'store/RootStore/utils';
 import ProductDetailsStore from 'store/local/ProductDetailsStore';
-import { useLocalStore } from 'utils/useLocalStore';
-import { RequestStatus } from 'utils/requestStatus';
+import { useLocalStore } from 'utils';
+import { RequestStatus } from 'utils';
 import { observer } from 'mobx-react-lite';
 
 const ProductCardData = () => {

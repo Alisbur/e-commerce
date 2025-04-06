@@ -2,8 +2,8 @@ import { getProductDetails } from 'api/agent';
 import { TResponse } from 'api/types/types';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { normalizeProductResponse, TProductResponseApi, TProductResponseModel, TProductModel } from 'store/models';
-import { RequestStatus } from 'utils/requestStatus';
-import { ILocalStore } from 'utils/useLocalStore';
+import { RequestStatus } from 'utils';
+import { ILocalStore } from 'utils';
 
 type TPrivateFields = '_productDetails' | '_requestStatus';
 
@@ -53,8 +53,7 @@ export default class ProductDetailsStore implements ILocalStore {
 
       if (response.error) {
         this._requestStatus = RequestStatus.error;
-        //TODO: Убрать
-        console.log(response.error);
+        console.log(response.error.error.status, response.error.error.details);
       }
     });
   }
