@@ -1,5 +1,5 @@
-import { TFilterOption } from "App/pages/Products";
-import { TProductCategoryModel } from "store/models";
+import { TFilterOption } from 'App/pages/Products';
+import { TProductCategoryModel } from 'store/models';
 
 export const convertCategoryToFilterOption = (category: TProductCategoryModel): TFilterOption => ({
   key: category.documentId,

@@ -1,4 +1,4 @@
-import { TProductImageFormatApi, TProductImageFormatModel } from "./ProductImageFormat";
+import { TProductImageFormatApi, TProductImageFormatModel } from './ProductImageFormat';
 
 export type TProductImageFormatsApi = {
   large?: TProductImageFormatApi;
@@ -19,4 +19,4 @@ export const normalizeProductImageFormats = (from: TProductImageFormatsApi): TPr
   small: from.small ?? null,
   medium: from.medium ?? null,
   thumbnail: from.thumbnail ?? null,
-})
+});

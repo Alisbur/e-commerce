@@ -1,5 +1,5 @@
-import { normalizeMeta, TMetaApi, TMetaModel } from "./meta";
-import { normalizeProduct, TProductApi, TProductModel } from "./Product";
+import { normalizeMeta, TMetaApi, TMetaModel } from './meta';
+import { normalizeProduct, TProductApi, TProductModel } from './Product';
 
 export type TProductListResponseApi = {
   data: TProductApi[];

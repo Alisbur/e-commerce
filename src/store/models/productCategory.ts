@@ -1,8 +1,8 @@
-import { normalizeId, TIdApi, TIdModel } from "./id";
-import { normalizeProductImage, TProductImageApi, TProductImageModel } from "./ProductImage";
+import { normalizeId, TIdApi, TIdModel } from './id';
+import { normalizeProductImage, TProductImageApi, TProductImageModel } from './ProductImage';
 
 export type TProductCategoryApi = {
-  id: number,
+  id: number;
   documentId: string;
   title: string;
   image?: TProductImageApi;
@@ -16,7 +16,7 @@ export type TProductCategoryApi = {
 } & { [key: string]: unknown };
 
 export type TProductCategoryModel = {
-  id: number,
+  id: number;
   documentId: string;
   title: string;
   image: TProductImageModel | null;
@@ -26,7 +26,7 @@ export type TProductCategoryModel = {
   createdBy: TIdModel | null;
   updatedBy: TIdModel | null;
   locale: string;
-}
+};
 
 export const normalizeProductCategory = (from: TProductCategoryApi): TProductCategoryModel => ({
   id: from.id,
@@ -36,7 +36,7 @@ export const normalizeProductCategory = (from: TProductCategoryApi): TProductCat
   createdAt: from.createdAt ? new Date(from.createdAt) : null,
   updatedAt: from.updatedAt ? new Date(from.updatedAt) : null,
   publishedAt: from.publishedAt ? new Date(from.publishedAt) : null,
-  createdBy: from.createdBy ? normalizeId(from.createdBy): null,
-  updatedBy: from.updatedBy ? normalizeId(from.updatedBy): null,
+  createdBy: from.createdBy ? normalizeId(from.createdBy) : null,
+  updatedBy: from.updatedBy ? normalizeId(from.updatedBy) : null,
   locale: from.locale,
-})
+});

@@ -6,9 +6,9 @@ export type TIdApi = {
 export type TIdModel = {
   id: number;
   documentId: string;
-}
+};
 
 export const normalizeId = (from: TIdApi): TIdModel => ({
   id: from.id,
   documentId: from.documentId,
-})
+});

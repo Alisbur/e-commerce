@@ -1,5 +1,5 @@
-import { normalizeMeta, TMetaApi, TMetaModel } from "./meta";
-import { normalizeProductCategory, TProductCategoryApi, TProductCategoryModel } from "./ProductCategory";
+import { normalizeMeta, TMetaApi, TMetaModel } from './meta';
+import { normalizeProductCategory, TProductCategoryApi, TProductCategoryModel } from './ProductCategory';
 
 export type TProductCategoriesResponseApi = {
   data: TProductCategoryApi[];
@@ -11,7 +11,9 @@ export type TProductCategoriesResponseModel = {
   meta: TMetaModel | null;
 };
 
-export const normalizeProductCategoriesResponse = (from: TProductCategoriesResponseApi): TProductCategoriesResponseModel => ({
+export const normalizeProductCategoriesResponse = (
+  from: TProductCategoriesResponseApi,
+): TProductCategoriesResponseModel => ({
   data: from.data.map((c) => normalizeProductCategory(c)),
   meta: from.meta ? normalizeMeta(from.meta) : null,
-})
+});

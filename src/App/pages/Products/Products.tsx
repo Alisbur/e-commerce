@@ -47,7 +47,7 @@ const Products = observer(() => {
         console.log('SETSEARCH В USE EFFECT', search);
       }
     }
-  }, [search]);
+  }, [search, setSearch]);
 
   //Загрузка категорий
   useEffect(() => {
@@ -55,7 +55,7 @@ const Products = observer(() => {
       const searchParams = '';
       categoriesStore.downloadCategoriesList({ searchParams });
     }
-  }, [categoriesStore]);
+  }, [categoriesStore, categoriesList.length]);
 
   //Синхронизация выбранных категорий с данными стора
   useEffect(() => {
@@ -78,11 +78,14 @@ const Products = observer(() => {
   }, [filterOptions]);
 
   //Переход к странице пагинации n
-  const handleGoToPage = useCallback((n: number) => {
-    const paginationSearchParams = makePaginationParams(n, ITEMS_PER_PAGE);
-    const newSearchString = setParamEntity('pagination', paginationSearchParams);
-    navigate({ search: newSearchString });
-  }, [navigate, setParamEntity]);
+  const handleGoToPage = useCallback(
+    (n: number) => {
+      const paginationSearchParams = makePaginationParams(n, ITEMS_PER_PAGE);
+      const newSearchString = setParamEntity('pagination', paginationSearchParams);
+      navigate({ search: newSearchString });
+    },
+    [navigate, setParamEntity],
+  );
 
   //Поиск по данным категорий и строке ввода
   const handleSearch = useCallback(() => {

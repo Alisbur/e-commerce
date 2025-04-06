@@ -37,7 +37,7 @@ const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, pro
 
       relatedStore.downloadProductList({ searchParams });
     }
-  }, [productDocumentId, productCategoryDocumentId]);
+  }, [productDocumentId, productCategoryDocumentId, relatedStore]);
 
   return (
     <div className={styles.wrapper}>

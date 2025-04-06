@@ -55,7 +55,8 @@ export default class CategoriesListStore implements ILocalStore {
     this._pagination = null;
 
     const response: TResponse<TProductCategoriesResponseApi> = await getItemsList<TProductCategoriesResponseApi>({
-      route: API_ROUTES.categories, searchParams,
+      route: API_ROUTES.categories,
+      searchParams,
     });
 
     runInAction(() => {

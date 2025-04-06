@@ -1,4 +1,4 @@
-import { makeSearchParams } from "./makeSearchParams";
+import { makeSearchParams } from './makeSearchParams';
 
 export const makeProductsListSearchParams = ({ productsPerPage }: { productsPerPage: number }) => {
   const searchConfig = {

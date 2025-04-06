@@ -8,6 +8,4 @@ const router = createBrowserRouter(routesConfig);
 
 const root = createRoot(document.getElementById('root')! as HTMLDivElement);
 
-root.render(
-  <RouterProvider router={router} />
-);
+root.render(<RouterProvider router={router} />);

@@ -1,4 +1,8 @@
-import { normalizeProductImageFormats, TProductImageFormatsApi, TProductImageFormatsModel } from "./ProductImageformats";
+import {
+  normalizeProductImageFormats,
+  TProductImageFormatsApi,
+  TProductImageFormatsModel,
+} from './ProductImageformats';
 
 export type TProductImageApi = {
   id: number;
@@ -40,4 +44,4 @@ export const normalizeProductImage = (from: TProductImageApi): TProductImageMode
   size: from.size ?? null,
   url: from.url ?? null,
   previewUrl: from.previewUrl ?? null,
-})
+});

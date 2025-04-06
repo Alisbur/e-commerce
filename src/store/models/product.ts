@@ -1,6 +1,6 @@
-import { normalizeProductImage, TProductImageApi, TProductImageModel } from "./ProductImage";
-import { normalizeProductCategory, TProductCategoryApi, TProductCategoryModel } from "./ProductCategory";
-import { normalizeId, TIdApi, TIdModel } from "./id";
+import { normalizeProductImage, TProductImageApi, TProductImageModel } from './ProductImage';
+import { normalizeProductCategory, TProductCategoryApi, TProductCategoryModel } from './ProductCategory';
+import { normalizeId, TIdApi, TIdModel } from './id';
 
 export type TProductApi = {
   id: number;
@@ -58,4 +58,4 @@ export const normalizeProduct = (from: TProductApi): TProductModel => ({
   createdBy: from.createdBy ? normalizeId(from.createdBy) : null,
   updatedBy: from.updatedBy ? normalizeId(from.updatedBy) : null,
   locale: from.locale ?? null,
-})
+});
