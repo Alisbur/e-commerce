@@ -6,7 +6,7 @@ import { FILTER_OPTIONS } from './constants/constants';
 import TotalBlock from './components/TotalBlock';
 import Pagination from 'components/Pagination';
 import ProductCardsList from 'components/ProductCardsList';
-import { useNavigate, useSearchParams } from 'react-router';
+import { replace, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { handleAddToCart } from 'utils/cart';
 import { makeProductsListSearchParams } from 'api/utils';
 import { PAGE_ROUTES } from 'config/routes';
@@ -15,9 +15,19 @@ import ProductsListStore from 'store/local/ProductsListStore';
 import { RequestStatus } from 'utils/requestStatus';
 import { observer } from 'mobx-react-lite';
 import CategoriesListStore from 'store/local/CategoriesListStore';
-// import rootStore from 'store/RootStore';
+import rootStore from 'store/RootStore';
+import { makeSearchQueryParams } from 'utils/makeSearchQueryParams';
+import { makeCategoriesFilterParams } from 'utils/makeCategoriesFilterParams';
+import { makePaginationParams } from 'utils/makePaginationParams';
 
-export type TFilterOption = { key: string; value: string };
+export type TFilterOption = { key: string; value: string; type: 'category' | 'sort'; rule: Record<any, any> };
+
+const convertCategoryToFilterOption = (category: TProductCategoryModel): TFilterOption => ({
+  key: category.documentId,
+  value: category.title,
+  type: 'category',
+  rule: {},
+});
 
 const ITEMS_PER_PAGE = 9;
 
@@ -27,20 +37,41 @@ const Products = observer(() => {
   const [searchP, setSearchP] = useSearchParams();
 
   const navigate = useNavigate();
+  const { search } = useLocation();
 
   const productsStore = useLocalStore(() => new ProductsListStore());
   const categoriesStore = useLocalStore(() => new CategoriesListStore());
-  // const { setSearch } = rootStore.query;
+  const { categoriesList } = categoriesStore;
+  const { setSearch, queryString, setParamEntity, setQueryString, getSearch, getParam, removeParamEntities } = rootStore.query;
 
   useEffect(() => {
-    const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
-    productsStore.downloadProductList({ searchParams });
-  }, [productsStore]);
+    if (!search) {
+      const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
+      setSearch(searchParams);
+    } else {
+      setSearch(search);
+    }
+  }, [search]);
 
   useEffect(() => {
-    const searchParams = '';
-    categoriesStore.downloadCategoriesList({ searchParams });
+    if(!categoriesList.length) {
+      const searchParams = '';
+      categoriesStore.downloadCategoriesList({ searchParams });
+    }
   }, [categoriesStore]);
+
+  useEffect(() => {
+    const filterParams = makeCategoriesFilterParams(
+      filterValue.filter((fv) => fv.type === 'category').map((fv) => fv.key),
+    );
+    const paginationParams = makePaginationParams(1, ITEMS_PER_PAGE);
+    setParamEntity('pagination', paginationParams);
+    const newSearchString = setParamEntity('filters', filterParams);
+    if (newSearchString) {
+      // navigate({ search: newSearchString});
+      setSearchP(`?${newSearchString}`);
+    }
+  }, [filterValue]);
 
   //Получение значения для фильтра
   const getTitle = useMemo(() => {
@@ -52,17 +83,20 @@ const Products = observer(() => {
         : 'Filter';
   }, [filterValue]);
 
-  //Заглушка для перехода на следующую страницу пагинации
-  const handleNextPage = () => {};
-
-  //Заглушка для перехода на предыдущую страницу пагинации
-  const handlePrevPage = () => {};
-
   //Заглушка для перехода к указанной странице пагинации
-  const handleNGoToPage = (n: number) => n;
+  const handleGoToPage = (n: number) => {
+    const paginationSearchParams = makePaginationParams(n);
+    const newSearchString = setParamEntity('pagination', paginationSearchParams);
+    navigate({ search: newSearchString });
+  };
 
   //Заглушка для поиска
-  const handleSearch = () => {};
+  const handleSearch = () => {
+    const querySearchParams = makeSearchQueryParams(queryString);
+    const newSearchString = setParamEntity('filters', querySearchParams);
+    navigate({ search: newSearchString });
+    // setSearchP(`?${newSearchString}`);
+  };
 
   const handleCardClick = (documentId: string) => {
     navigate(PAGE_ROUTES.product.create(documentId));
@@ -76,9 +110,9 @@ const Products = observer(() => {
           name of the item
         </TitleBlock>
         <FindBlock
-          searchString={searchString}
-          onSearchStringChange={(s) => {setSearchString(s); setSearchP({search: s})}}
-          filterOptions={FILTER_OPTIONS}
+          searchString={queryString}
+          onSearchStringChange={setQueryString}
+          filterOptions={[...categoriesList.map((c) => convertCategoryToFilterOption(c)), ...FILTER_OPTIONS]}
           filterValue={filterValue}
           onFilterChange={setFilterValue}
           getTitle={getTitle}
@@ -94,9 +128,7 @@ const Products = observer(() => {
               <Pagination
                 page={productsStore.pagination?.page}
                 pageCount={productsStore.pagination?.pageCount}
-                next={handleNextPage}
-                prev={handlePrevPage}
-                goTo={handleNGoToPage}
+                goTo={handleGoToPage}
               />
             ) : undefined
           }

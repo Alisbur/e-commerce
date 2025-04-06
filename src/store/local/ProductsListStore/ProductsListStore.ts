@@ -84,9 +84,10 @@ export default class ProductsListStore implements ILocalStore {
   private readonly _qpReaction: IReactionDisposer = reaction(
     () => {
       console.log("REACTION STARTS");
-      return rootStore.query.getParam('search');
+      return rootStore.query.getSearch;
     },
     (search) => {
+      this.downloadProductList({searchParams: search});
       console.log("search value change", search);
     }
   );

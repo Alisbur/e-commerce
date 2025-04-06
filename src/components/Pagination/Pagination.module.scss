@@ -3,6 +3,7 @@
 
 .pagination {
   display: flex;
+  align-items: center;
   gap: v.$space-pagination;
 
   &__pages {

@@ -6,12 +6,10 @@ import ArrowSide from 'components/icons/ArrowSide';
 export type TPaginationProps = {
   page?: number | null;
   pageCount?: number | null;
-  next: () => void;
-  prev: () => void;
   goTo: (n: number) => void;
 };
 
-const Pagination: FC<TPaginationProps> = ({ page = 1, pageCount = 1, next, prev, goTo }) => {
+const Pagination: FC<TPaginationProps> = ({ page = 1, pageCount = 1, goTo }) => {
   if (typeof page !== 'number' || typeof pageCount !== 'number') return null;
 
   return (
@@ -24,7 +22,7 @@ const Pagination: FC<TPaginationProps> = ({ page = 1, pageCount = 1, next, prev,
         className={classNames(styles.pagination__arrow, styles.pagination__arrow_left, {
           [styles.pagination__arrow_disabled]: page <= 1,
         })}
-        onClick={prev}
+        onClick={() => goTo(page - 1)}
       />
       <ul className={styles.pagination__pages}>
         {Array(pageCount)
@@ -46,7 +44,7 @@ const Pagination: FC<TPaginationProps> = ({ page = 1, pageCount = 1, next, prev,
         width={35}
         height={35}
         className={classNames(styles.pagination__arrow, { [styles.pagination__arrow_disabled]: page >= pageCount })}
-        onClick={next}
+        onClick={() => goTo(page + 1)}
       />
     </div>
   );
