@@ -1,4 +1,4 @@
-import { action, computed, makeObservable, observable, toJS } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import qs, { ParsedQs } from 'qs';
 import { getQueryStringFromSearch } from '../utils';
 import { getSelectedCategoriesFromSearch } from '../utils';
@@ -73,15 +73,10 @@ export default class QueryParamsStore {
   setSearch = (search: string) => {
     search = search.startsWith('?') ? search.slice(1) : search;
     if (this._search !== search) {
-      console.log('SEARCH: ', search);
       this._search = search;
       this._params = qs.parse(search);
-      console.log('SEARCH: ', this._search);
-      console.log('PARAMS: ', toJS(this._params));
       this._searchString = getQueryStringFromSearch(this._params);
-      console.log('queryString', this._searchString);
       this._filterValue = getSelectedCategoriesFromSearch(this._params);
-      console.log('selectedCats', toJS(this._filterValue));
     }
   };
 }

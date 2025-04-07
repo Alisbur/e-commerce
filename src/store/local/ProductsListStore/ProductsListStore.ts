@@ -1,14 +1,13 @@
 import { getItemsList } from 'api/agent';
 import { API_ROUTES } from 'api/config/api-routes';
 import { TResponse } from 'api/types/types';
-import { action, computed, IReactionDisposer, makeObservable, observable, reaction, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import {
   normalizeProductListResponse,
   TProductListResponseApi,
   TProductListResponseModel,
   TProductModel,
 } from 'store/models';
-import rootStore from 'store/RootStore';
 import { RequestStatus } from 'utils';
 import { ILocalStore } from 'utils';
 
@@ -76,18 +75,5 @@ export default class ProductsListStore implements ILocalStore {
     });
   }
 
-  destroy(): void {
-    this._qpReaction();
-  }
-
-  private readonly _qpReaction: IReactionDisposer = reaction(
-    () => {
-      console.log('REACTION STARTS');
-      return rootStore.query.getSearch;
-    },
-    (search) => {
-      this.downloadProductList({ searchParams: search });
-      console.log('search value change', search);
-    },
-  );
+  destroy(): void {}
 }

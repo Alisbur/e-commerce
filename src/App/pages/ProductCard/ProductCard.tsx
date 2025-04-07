@@ -23,7 +23,6 @@ const ProductCardData = () => {
     if (documentId) {
       const searchParams = makeProductDetailsSearchParams();
       productStore.downloadProductDetails({ documentId, searchParams });
-      console.log('download');
     }
   }, [documentId, productStore]);
 
@@ -40,7 +39,7 @@ const ProductCardData = () => {
   return (
     <section className={styles.wrapper}>
       <div className={styles.content}>
-        <BackButton caption="Назад" onBack={() => navigate(-1)} />
+        <BackButton caption="Back" onBack={() => navigate(-1)} />
         {productStore.productDetails && (
           <ProductDetails
             product={productStore.productDetails}

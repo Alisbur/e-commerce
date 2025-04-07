@@ -67,7 +67,6 @@ export default class CategoriesListStore implements ILocalStore {
       }
 
       if (response.data) {
-        console.log(response.data);
         const responseData: TProductCategoriesResponseModel = normalizeProductCategoriesResponse(response.data);
         this._categoriesList = responseData.data;
         this._pagination = responseData?.meta?.pagination ?? null;

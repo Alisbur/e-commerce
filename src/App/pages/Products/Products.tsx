@@ -36,18 +36,20 @@ const Products = observer(() => {
   const { categoriesList } = categoriesStore;
   const { setSearch, setParamEntity, searchString, setSearchString, filterValue } = rootStore.query;
 
-  //Установка параметров поиска
+  //Установка параметров поиска и поиск
   useEffect(() => {
-    if (search !== undefined) {
+    if (productsStore && search !== undefined) {
+      let searchParams = '';
       if (!search) {
-        const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
+        searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
         setSearch(searchParams);
       } else {
+        searchParams = search.startsWith('') ? search.slice(1) : search;
         setSearch(search);
-        console.log('SETSEARCH В USE EFFECT', search);
       }
+      productsStore.downloadProductList({ searchParams });
     }
-  }, [search, setSearch]);
+  }, [search, setSearch, productsStore]);
 
   //Загрузка категорий
   useEffect(() => {
