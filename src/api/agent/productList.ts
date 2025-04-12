@@ -3,16 +3,17 @@ import { axiosInstance } from 'api/config/axios';
 import { DEFAULT_ERROR } from 'api/config/default-error';
 import { TResponse } from 'api/types/types';
 import { TErrorResponseApi } from 'api/types/types';
+import { TProductListResponseApi } from 'store/models';
 
-export const getItemsList = async <T>({
+export const getProductList = async({
   route,
   searchParams,
 }: {
   route: string;
   searchParams: string;
-}): Promise<TResponse<T>> => {
+}): Promise<TResponse<TProductListResponseApi>> => {
   try {
-    const { data }: AxiosResponse<T> = await axiosInstance.get<T>(route, {
+    const { data }: AxiosResponse<TProductListResponseApi> = await axiosInstance.get(route, {
       params: { s: searchParams },
       paramsSerializer: ({ s }) => s,
     });

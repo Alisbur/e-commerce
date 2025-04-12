@@ -2,7 +2,7 @@ import {
   normalizeProductImageFormats,
   TProductImageFormatsApi,
   TProductImageFormatsModel,
-} from './ProductImageformats';
+} from './productImageformats';
 
 export type TProductImageApi = {
   id: number;
@@ -16,7 +16,7 @@ export type TProductImageApi = {
   size?: number;
   url?: string;
   previewUrl?: string;
-} & { [key: string]: unknown };
+};
 
 export type TProductImageModel = {
   id: number;

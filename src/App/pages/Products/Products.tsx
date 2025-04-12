@@ -4,16 +4,15 @@ import TitleBlock from 'components/TitleBlock';
 import FindBlock from './components/FindBlock/FindBlock';
 import TotalBlock from './components/TotalBlock';
 import Pagination from 'components/Pagination';
-import ProductCardsList from 'components/ProductCardsList';
+import ProductCardList from 'components/ProductCardList';
 import { useLocation, useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils';
 import { makeProductsListSearchParams } from 'store/RootStore/utils';
 import { PAGE_ROUTES } from 'config/routes';
 import { useLocalStore } from 'utils';
-import ProductsListStore from 'store/local/ProductsListStore';
-import { RequestStatus } from 'utils';
+import ProductsListStore from 'store/local/ProductListStore';
 import { observer } from 'mobx-react-lite';
-import CategoriesListStore from 'store/local/CategoriesListStore';
+import CategoryListStore from 'store/local/CategoryListStore';
 import rootStore from 'store/RootStore';
 import { makeSearchQueryParams } from 'store/RootStore/utils';
 import { makeCategoriesFilterParams } from 'store/RootStore/utils';
@@ -32,8 +31,8 @@ const Products = observer(() => {
   const { search } = useLocation();
 
   const productsStore = useLocalStore(() => new ProductsListStore());
-  const categoriesStore = useLocalStore(() => new CategoriesListStore());
-  const { categoriesList } = categoriesStore;
+  const categoriesStore = useLocalStore(() => new CategoryListStore());
+  const { categoryList } = categoriesStore;
   const { setSearch, setParamEntity, searchString, setSearchString, filterValue } = rootStore.query;
 
   //Установка параметров поиска и поиск
@@ -53,21 +52,21 @@ const Products = observer(() => {
 
   //Загрузка категорий
   useEffect(() => {
-    if (!categoriesList.length) {
+    if (!categoryList.length) {
       const searchParams = '';
-      categoriesStore.downloadCategoriesList({ searchParams });
+      categoriesStore.downloadCategoryList({ searchParams });
     }
-  }, [categoriesStore, categoriesList.length]);
+  }, [categoriesStore, categoryList.length]);
 
   //Синхронизация выбранных категорий с данными стора
   useEffect(() => {
-    if (categoriesList.length && filterValue.length) {
-      const newOptions = categoriesList
+    if (categoryList.length && filterValue.length) {
+      const newOptions = categoryList
         .map((c) => convertCategoryToFilterOption(c))
         .filter((o) => filterValue.includes(o.key));
       setFilterOptions(newOptions);
     }
-  }, [filterValue, categoriesList]);
+  }, [filterValue, categoryList]);
 
   //Получение строки для фильтра
   const getTitle = useMemo(() => {
@@ -125,15 +124,15 @@ const Products = observer(() => {
         <FindBlock
           searchString={searchString}
           onSearchStringChange={setSearchString}
-          filterOptions={categoriesList.map((c) => convertCategoryToFilterOption(c))}
+          filterOptions={categoryList.map((c) => convertCategoryToFilterOption(c))}
           filterValue={filterOptions}
           onFilterChange={setFilterOptions}
           getTitle={getTitle}
           onFind={handleSearch}
         />
         <TotalBlock total={productsStore.pagination?.total ?? 0} />
-        <ProductCardsList
-          products={productsStore.productsList}
+        <ProductCardList
+          products={productsStore.productList}
           addToCart={handleAddToCart}
           onCardClick={handleCardClick}
           paginationSlot={
@@ -145,7 +144,7 @@ const Products = observer(() => {
               />
             ) : undefined
           }
-          isLoading={productsStore.requestStatus === RequestStatus.loading}
+          isLoading={productsStore.isLoading}
         />
       </div>
     </main>

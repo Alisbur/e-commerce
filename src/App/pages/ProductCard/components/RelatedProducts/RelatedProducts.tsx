@@ -1,14 +1,13 @@
 import { FC, useEffect } from 'react';
 import styles from './RelatedProducts.module.scss';
-import ProductCardsList from 'components/ProductCardsList';
+import ProductCardList from 'components/ProductCardList';
 import Text from 'components/Text';
 import { useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils';
 import { makeRelatedProductsSearchParams } from 'store/RootStore/utils';
 import { PAGE_ROUTES } from 'config/routes';
-import ProductsListStore from 'store/local/ProductsListStore';
+import ProductListStore from 'store/local/ProductListStore';
 import { useLocalStore } from 'utils';
-import { RequestStatus } from 'utils';
 import { observer } from 'mobx-react-lite';
 
 type TRelatedProductsProps = {
@@ -19,7 +18,7 @@ type TRelatedProductsProps = {
 const RELATED_ITEMS_QUANTITY = 3;
 
 const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId }) => {
-  const relatedStore = useLocalStore(() => new ProductsListStore());
+  const relatedStore = useLocalStore(() => new ProductListStore());
 
   const navigate = useNavigate();
 
@@ -44,11 +43,11 @@ const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, pro
       <Text view="subtitle" tag="h2" className={styles.title}>
         Related Items
       </Text>
-      <ProductCardsList
-        products={relatedStore.productsList}
+      <ProductCardList
+        products={relatedStore.productList}
         addToCart={handleAddToCart}
         onCardClick={handleCardClick}
-        isLoading={relatedStore.requestStatus === RequestStatus.loading}
+        isLoading={relatedStore.isLoading}
       />
     </div>
   );

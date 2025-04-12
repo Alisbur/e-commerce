@@ -1,4 +1,4 @@
-import { getItemsList } from 'api/agent';
+import { getProductList } from 'api/agent';
 import { API_ROUTES } from 'api/config/api-routes';
 import { TResponse } from 'api/types/types';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
@@ -8,53 +8,54 @@ import {
   TProductListResponseModel,
   TProductModel,
 } from 'store/models';
-import { RequestStatus } from 'utils';
-import { ILocalStore } from 'utils';
+import { RequestStatus, ILocalStore } from 'utils';
+import { TPagination } from './types';
 
-type Pagination = {
-  page: number | null;
-  pageSize: number | null;
-  pageCount: number | null;
-  total: number | null;
-};
+type TPrivateFields = '_productList' | '_requestStatus' | '_pagination' | '_isLoading';
 
-type TPrivateFields = '_productsList' | '_requestStatus' | '_pagination';
-
-export default class ProductsListStore implements ILocalStore {
-  private _productsList: TProductModel[] = [];
+export default class ProductListStore implements ILocalStore {
+  private _productList: TProductModel[] = [];
   private _requestStatus: RequestStatus = RequestStatus.initial;
-  private _pagination: Pagination | null = null;
+  private _pagination: TPagination | null = null;
+  private _isLoading: boolean = true;
 
   constructor() {
-    makeObservable<ProductsListStore, TPrivateFields>(this, {
-      _productsList: observable.ref,
+    makeObservable<ProductListStore, TPrivateFields>(this, {
+      _productList: observable.ref,
       _requestStatus: observable,
       _pagination: observable.ref,
+      _isLoading: observable,
       requestStatus: computed,
-      productsList: computed,
+      productList: computed,
       pagination: computed,
+      isLoading: computed,
       downloadProductList: action,
     });
   }
 
-  get productsList(): TProductModel[] {
-    return this._productsList;
+  get productList(): TProductModel[] {
+    return this._productList;
   }
 
   get requestStatus(): RequestStatus {
     return this._requestStatus;
   }
 
-  get pagination(): Pagination | null {
+  get pagination(): TPagination | null {
     return this._pagination;
+  }
+
+  get isLoading(): boolean {
+    return this._isLoading;
   }
 
   async downloadProductList({ searchParams }: { searchParams: string }): Promise<void> {
     this._requestStatus = RequestStatus.loading;
-    this._productsList = [];
+    this._isLoading = true;
+    this._productList = [];
     this._pagination = null;
 
-    const response: TResponse<TProductListResponseApi> = await getItemsList<TProductListResponseApi>({
+    const response: TResponse<TProductListResponseApi> = await getProductList({
       route: API_ROUTES.products,
       searchParams,
     });
@@ -63,15 +64,13 @@ export default class ProductsListStore implements ILocalStore {
       if (response.error) {
         this._requestStatus = RequestStatus.error;
         console.log(response.error.error.status, response.error.error.status);
-        return;
-      }
-
-      if (response.data) {
+      } else if (response.data) {
         const responseData: TProductListResponseModel = normalizeProductListResponse(response.data);
-        this._productsList = responseData.data;
+        this._productList = responseData.data;
         this._pagination = responseData.meta.pagination ?? null;
         this._requestStatus = RequestStatus.success;
       }
+      this._isLoading = false;
     });
   }
 

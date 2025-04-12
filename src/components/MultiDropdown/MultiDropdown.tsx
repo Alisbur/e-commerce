@@ -80,7 +80,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, options, value
       />
       {isOpen && !disabled && (
         <div className={styles.options}>
-          {filteredItems.map((item: TFilterOption) => {
+          {filteredItems.map((item) => {
             const isSelected = value.some((el) => item.key === el.key);
 
             return (

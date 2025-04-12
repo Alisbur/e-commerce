@@ -11,9 +11,7 @@ export type TProductCategoryApi = {
   publishedAt?: string;
   createdBy?: TIdApi;
   updatedBy?: TIdApi;
-  locale: string;
-  localizations?: unknown;
-} & { [key: string]: unknown };
+};
 
 export type TProductCategoryModel = {
   id: number;
@@ -25,7 +23,6 @@ export type TProductCategoryModel = {
   publishedAt: Date | null;
   createdBy: TIdModel | null;
   updatedBy: TIdModel | null;
-  locale: string;
 };
 
 export const normalizeProductCategory = (from: TProductCategoryApi): TProductCategoryModel => ({
@@ -38,5 +35,4 @@ export const normalizeProductCategory = (from: TProductCategoryApi): TProductCat
   publishedAt: from.publishedAt ? new Date(from.publishedAt) : null,
   createdBy: from.createdBy ? normalizeId(from.createdBy) : null,
   updatedBy: from.updatedBy ? normalizeId(from.updatedBy) : null,
-  locale: from.locale,
 });

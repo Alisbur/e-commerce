@@ -76,6 +76,7 @@ export default class QueryParamsStore {
       this._search = search;
       this._params = qs.parse(search);
       this._searchString = getQueryStringFromSearch(this._params);
+      this._searchString = getQueryStringFromSearch(this._params);
       this._filterValue = getSelectedCategoriesFromSearch(this._params);
     }
   };

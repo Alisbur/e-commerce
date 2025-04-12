@@ -10,10 +10,9 @@ import { handleAddToCart, handleBuyNow } from 'utils';
 import { makeProductDetailsSearchParams } from 'store/RootStore/utils';
 import ProductDetailsStore from 'store/local/ProductDetailsStore';
 import { useLocalStore } from 'utils';
-import { RequestStatus } from 'utils';
 import { observer } from 'mobx-react-lite';
 
-const ProductCardData = () => {
+const ProductCard = observer(() => {
   const { documentId } = useParams();
   const navigate = useNavigate();
 
@@ -43,7 +42,7 @@ const ProductCardData = () => {
         {productStore.productDetails && (
           <ProductDetails
             product={productStore.productDetails}
-            isLoading={productStore.requestStatus === RequestStatus.loading}
+            isLoading={productStore.isLoading}
           >
             <Button onClick={handleBuyProductNow}>Buy Now</Button>
             <Button onClick={handleAddProductToCart} variant="white">
@@ -60,8 +59,6 @@ const ProductCardData = () => {
       </div>
     </section>
   );
-};
-
-const ProductCard = observer(ProductCardData);
+});
 
 export default ProductCard;
