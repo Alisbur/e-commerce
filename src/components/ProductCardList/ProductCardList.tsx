@@ -14,13 +14,7 @@ type ProductCardListProps = {
   isLoading: boolean;
 };
 
-const ProductCardList: FC<ProductCardListProps> = ({
-  products,
-  isLoading,
-  addToCart,
-  onCardClick,
-  paginationSlot,
-}) => {
+const ProductCardList: FC<ProductCardListProps> = ({ products, isLoading, addToCart, onCardClick, paginationSlot }) => {
   if (isLoading) return <Loader size="l" />;
 
   if (!Array.isArray(products))

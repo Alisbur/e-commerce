@@ -5,7 +5,7 @@ import { TResponse } from 'api/types/types';
 import { TErrorResponseApi } from 'api/types/types';
 import { TProductListResponseApi } from 'store/models';
 
-export const getProductList = async({
+export const getProductList = async ({
   route,
   searchParams,
 }: {

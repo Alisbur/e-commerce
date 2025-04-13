@@ -9,9 +9,8 @@ const router = createBrowserRouter(routesConfig);
 
 const root = createRoot(document.getElementById('root')! as HTMLDivElement);
 
-
 root.render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>
+  </StrictMode>,
 );

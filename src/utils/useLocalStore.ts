@@ -12,7 +12,12 @@ export const useLocalStore = <T extends ILocalStore>(creator: () => T): T => {
   }
 
   useEffect(() => {
-    return () => container?.current?.destroy();
+    return () => {
+      if (container?.current) {
+        container?.current?.destroy();
+        container.current = null;
+      }
+    };
   }, []);
 
   return container.current;

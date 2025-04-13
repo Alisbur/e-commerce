@@ -7,14 +7,13 @@ import Pagination from 'components/Pagination';
 import ProductCardList from 'components/ProductCardList';
 import { useLocation, useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils';
-import { makeProductsListSearchParams } from 'store/RootStore/utils';
 import { PAGE_ROUTES } from 'config/routes';
 import { useLocalStore } from 'utils';
 import ProductsListStore from 'store/local/ProductListStore';
 import { observer } from 'mobx-react-lite';
 import CategoryListStore from 'store/local/CategoryListStore';
 import rootStore from 'store/RootStore';
-import { makeSearchQueryParams } from 'store/RootStore/utils';
+import { makeProductsListSearchParams, makeSearchQueryParams } from 'store/RootStore/utils';
 import { makeCategoriesFilterParams } from 'store/RootStore/utils';
 import { makePaginationParams } from 'store/RootStore/utils';
 import { convertCategoryToFilterOption } from 'utils';
@@ -33,22 +32,28 @@ const Products = observer(() => {
   const productsStore = useLocalStore(() => new ProductsListStore());
   const categoriesStore = useLocalStore(() => new CategoryListStore());
   const { categoryList } = categoriesStore;
-  const { setSearch, setParamEntity, searchString, setSearchString, filterValue } = rootStore.query;
+  const { setSearch, setParamEntity, searchString, setSearchString, filterValue, params } = rootStore.query;
 
-  //Установка параметров поиска и поиск
+  //Установка строки searchParams
   useEffect(() => {
     if (productsStore && search !== undefined) {
-      let searchParams = '';
       if (!search) {
-        searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
-        setSearch(searchParams);
+        const paginationSearchParams = makePaginationParams(1, ITEMS_PER_PAGE);
+        const searchParams = setParamEntity('pagination', paginationSearchParams);
+        navigate({ search: searchParams });
       } else {
-        searchParams = search.startsWith('') ? search.slice(1) : search;
         setSearch(search);
       }
+    }
+  }, [search, setSearch, setParamEntity, productsStore, navigate]);
+
+  //Загрузка продуктов при изменении параметров поиска
+  useEffect(() => {
+    if (Object.keys(params).length && productsStore) {
+      const searchParams = makeProductsListSearchParams(params);
       productsStore.downloadProductList({ searchParams });
     }
-  }, [search, setSearch, productsStore]);
+  }, [params, productsStore]);
 
   //Загрузка категорий
   useEffect(() => {
@@ -58,7 +63,7 @@ const Products = observer(() => {
     }
   }, [categoriesStore, categoryList.length]);
 
-  //Синхронизация выбранных категорий с данными стора
+  //Синхронизация локального стейта выбранных категорий с данными стора
   useEffect(() => {
     if (categoryList.length && filterValue.length) {
       const newOptions = categoryList

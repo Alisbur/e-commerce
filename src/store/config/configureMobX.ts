@@ -5,5 +5,5 @@ configure({
   computedRequiresReaction: true,
   reactionRequiresObservable: true,
   observableRequiresReaction: true,
-  enforceActions: "observed",
+  enforceActions: 'observed',
 });

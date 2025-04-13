@@ -40,10 +40,7 @@ const ProductCard = observer(() => {
       <div className={styles.content}>
         <BackButton caption="Back" onBack={() => navigate(-1)} />
         {productStore.productDetails && (
-          <ProductDetails
-            product={productStore.productDetails}
-            isLoading={productStore.isLoading}
-          >
+          <ProductDetails product={productStore.productDetails} isLoading={productStore.isLoading}>
             <Button onClick={handleBuyProductNow}>Buy Now</Button>
             <Button onClick={handleAddProductToCart} variant="white">
               Add to Cart

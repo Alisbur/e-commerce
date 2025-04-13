@@ -20,6 +20,7 @@ export default class QueryParamsStore {
       getSearch: computed,
       searchString: computed,
       filterValue: computed,
+      params: computed,
       getParam: action,
       setSearchString: action,
       setSearch: action,
@@ -38,6 +39,10 @@ export default class QueryParamsStore {
 
   get filterValue() {
     return this._filterValue;
+  }
+
+  get params(): qs.ParsedQs {
+    return this._params;
   }
 
   getParam = (key: string): string | ParsedQs | (string | ParsedQs)[] | null | undefined => {

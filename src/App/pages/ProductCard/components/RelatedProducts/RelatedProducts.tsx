@@ -28,11 +28,11 @@ const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, pro
 
   useEffect(() => {
     if (productDocumentId && productCategoryDocumentId) {
-      const searchParams = makeRelatedProductsSearchParams({
+      const searchParams = makeRelatedProductsSearchParams(
         productCategoryDocumentId,
         productDocumentId,
-        quantity: RELATED_ITEMS_QUANTITY,
-      });
+        RELATED_ITEMS_QUANTITY,
+      );
 
       relatedStore.downloadProductList({ searchParams });
     }
