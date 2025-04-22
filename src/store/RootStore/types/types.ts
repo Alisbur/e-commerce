@@ -1,0 +1,1 @@
+export type TParamValue = string | string[] | number | number[] | boolean | undefined | null;

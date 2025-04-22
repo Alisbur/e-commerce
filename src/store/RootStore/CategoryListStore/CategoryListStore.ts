@@ -1,13 +1,13 @@
 import { getCategoryList } from 'api/agent';
 import { TResponse } from 'api/types/types';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, autorun, computed, IReactionDisposer, makeObservable, observable, runInAction } from 'mobx';
 import {
   normalizeProductCategoriesResponse,
   TProductCategoriesResponseApi,
   TProductCategoriesResponseModel,
   TProductCategoryModel,
 } from 'store/models';
-import { RequestStatus, ILocalStore } from 'utils';
+import { RequestStatus} from 'utils';
 import { API_ROUTES } from 'api/config/api-routes';
 
 type Pagination = {
@@ -19,7 +19,7 @@ type Pagination = {
 
 type TPrivateFields = '_categoryList' | '_requestStatus' | '_pagination' | '_isLoading';
 
-export default class CategoryListStore implements ILocalStore {
+export default class CategoryListStore {
   private _categoryList: TProductCategoryModel[] = [];
   private _requestStatus: RequestStatus = RequestStatus.initial;
   private _pagination: Pagination | null = null;
@@ -83,5 +83,11 @@ export default class CategoryListStore implements ILocalStore {
     });
   }
 
-  destroy(): void {}
+  destroy(): void {
+    this._autorunDisposer();
+  };
+
+  private readonly _autorunDisposer: IReactionDisposer = autorun(() => {
+    this.downloadCategoryList({searchParams: ''});
+  });
 }

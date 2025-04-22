@@ -49,7 +49,7 @@ export default class ProductListStore implements ILocalStore {
     return this._isLoading;
   }
 
-  async downloadProductList({ searchParams }: { searchParams: string }): Promise<void> {
+  async downloadProductList({ searchParams }: { searchParams: Record<string, string | string[] | number | number[] | boolean | undefined | null> }): Promise<void> {
     this._requestStatus = RequestStatus.loading;
     this._isLoading = true;
     this._productList = [];

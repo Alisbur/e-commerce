@@ -5,5 +5,4 @@ export const convertCategoryToFilterOption = (category: TProductCategoryModel): 
   key: category.documentId,
   value: category.title,
   type: 'category',
-  rule: {},
 });

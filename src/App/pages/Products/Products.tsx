@@ -11,108 +11,75 @@ import { PAGE_ROUTES } from 'config/routes';
 import { useLocalStore } from 'utils';
 import ProductsListStore from 'store/local/ProductListStore';
 import { observer } from 'mobx-react-lite';
-import CategoryListStore from 'store/local/CategoryListStore';
 import rootStore from 'store/RootStore';
-import { makeProductsListSearchParams, makeSearchQueryParams } from 'store/RootStore/utils';
-import { makeCategoriesFilterParams } from 'store/RootStore/utils';
-import { makePaginationParams } from 'store/RootStore/utils';
 import { convertCategoryToFilterOption } from 'utils';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type TFilterOption = { key: string; value: string; type: 'category' | 'sort'; rule: Record<any, any> };
+export type TFilterOption = { key: string; value: string; type: 'category' | 'sort' };
 
 const ITEMS_PER_PAGE = 9;
 
 const Products = observer(() => {
-  const [filterOptions, setFilterOptions] = useState<TFilterOption[]>([]);
+  console.log('PAGE RERENDER');
 
   const navigate = useNavigate();
   const { search } = useLocation();
 
   const productsStore = useLocalStore(() => new ProductsListStore());
-  const categoriesStore = useLocalStore(() => new CategoryListStore());
-  const { categoryList } = categoriesStore;
-  const { setSearch, setParamEntity, searchString, setSearchString, filterValue, params } = rootStore.query;
+  const { categoryList } = rootStore.categories;
+  const { params, searchParamsString, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString } =
+    rootStore.query;
 
   //Установка строки searchParams
   useEffect(() => {
+    console.log('USE EFFECT1');
+    console.log(search);
+    let newSearchString = '';
     if (productsStore && search !== undefined) {
-      if (!search) {
-        const paginationSearchParams = makePaginationParams(1, ITEMS_PER_PAGE);
-        const searchParams = setParamEntity('pagination', paginationSearchParams);
-        navigate({ search: searchParams });
-      } else {
-        setSearch(search);
-      }
+      setSearchParamsString(search);
+      setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
+      newSearchString = applyParamsToSearchString();
+      navigate({ search: newSearchString });
     }
-  }, [search, setSearch, setParamEntity, productsStore, navigate]);
+  }, [search]);
 
-  //Загрузка продуктов при изменении параметров поиска
+  // Загрузка продуктов при изменении параметров поиска
   useEffect(() => {
     if (Object.keys(params).length && productsStore) {
-      const searchParams = makeProductsListSearchParams(params);
-      productsStore.downloadProductList({ searchParams });
+      productsStore.downloadProductList({ searchParams: params });
+      console.log('ПОМЕНЯЛИСЬ ПАРАМЕТРЫ', params);
     }
-  }, [params, productsStore]);
-
-  //Загрузка категорий
-  useEffect(() => {
-    if (!categoryList.length) {
-      const searchParams = '';
-      categoriesStore.downloadCategoryList({ searchParams });
-    }
-  }, [categoriesStore, categoryList.length]);
-
-  //Синхронизация локального стейта выбранных категорий с данными стора
-  useEffect(() => {
-    if (categoryList.length && filterValue.length) {
-      const newOptions = categoryList
-        .map((c) => convertCategoryToFilterOption(c))
-        .filter((o) => filterValue.includes(o.key));
-      setFilterOptions(newOptions);
-    }
-  }, [filterValue, categoryList]);
+  }, [searchParamsString, productsStore]);
 
   //Получение строки для фильтра
   const getTitle = useMemo(() => {
-    return (): string =>
-      filterOptions.length
-        ? Object.values(filterOptions)
-            .map((v) => v.value)
-            .join(' ')
-        : 'Filter';
-  }, [filterOptions]);
+    return () => {
+      if (Array.isArray(params.categoryIdList) && params.categoryIdList.length) {
+        return params.categoryIdList.length === 1
+          ? categoryList.find((c) => (params.categoryIdList as string[]).includes(c.documentId))?.title ||
+              'Categories filter'
+          : `Categories selected - ${params.categoryIdList.length}`;
+      } else return 'Categories filter';
+    };
+  }, [params.categoryIdList, categoryList]);
 
   //Переход к странице пагинации n
   const handleGoToPage = useCallback(
     (n: number) => {
-      const paginationSearchParams = makePaginationParams(n, ITEMS_PER_PAGE);
-      const newSearchString = setParamEntity('pagination', paginationSearchParams);
-      navigate({ search: newSearchString });
+      setParamValue('paginationPage', n);
+      setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
+      const newSearchURL = applyParamsToSearchString();
+      navigate({ search: newSearchURL });
     },
-    [navigate, setParamEntity],
+    [navigate, setParamValue, applyParamsToSearchString],
   );
 
   //Поиск по данным категорий и строке ввода
   const handleSearch = useCallback(() => {
-    //Добавление к объекту параметров в сторе параметров пагинации
-    const paginationParams = makePaginationParams(1, ITEMS_PER_PAGE);
-    let newSearchString = setParamEntity('pagination', paginationParams);
-
-    //Добавление к объекту параметров в сторе параметров фильтра выбранных категорий
-    const filterParams = makeCategoriesFilterParams(
-      filterOptions.filter((fo) => fo.type === 'category').map((fo) => fo.key),
-    );
-    newSearchString = setParamEntity('filters', filterParams);
-
-    //Добавление к объекту параметров в сторе параметров фильтра текстовой строки
-    const searchQueryParams = makeSearchQueryParams(searchString);
-    newSearchString = setParamEntity('filters', searchQueryParams);
-
-    if (newSearchString) {
-      navigate({ search: `?${newSearchString}` });
-    }
-  }, [filterOptions, navigate, searchString, setParamEntity]);
+    setParamValue('paginationPage', 1);
+    setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
+    const newSearchURL = applyParamsToSearchString();
+    navigate({ search: `?${newSearchURL}` });
+  }, [applyParamsToSearchString, setParamValue, navigate]);
 
   //Навигация при клике на карточку
   const handleCardClick = (documentId: string) => {
@@ -127,11 +94,21 @@ const Products = observer(() => {
           name of the item
         </TitleBlock>
         <FindBlock
-          searchString={searchString}
-          onSearchStringChange={setSearchString}
+          searchString={getParamValue('titleSearch') as string}
+          onSearchStringChange={(s) => setParamValue('titleSearch', s)}
           filterOptions={categoryList.map((c) => convertCategoryToFilterOption(c))}
-          filterValue={filterOptions}
-          onFilterChange={setFilterOptions}
+          filterValue={categoryList
+            .map((c) => convertCategoryToFilterOption(c))
+            .filter((o) => {
+              console.log(params.categoryIdList);
+              return (params.categoryIdList as string[]).includes(o.key);
+            })}
+          onFilterChange={(options) =>
+            setParamValue(
+              'categoryIdList',
+              options.map((o) => o.key),
+            )
+          }
           getTitle={getTitle}
           onFind={handleSearch}
         />

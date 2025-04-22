@@ -1,88 +1,97 @@
-import { action, computed, makeObservable, observable } from 'mobx';
-import qs, { ParsedQs } from 'qs';
-import { getQueryStringFromSearch } from '../utils';
-import { getSelectedCategoriesFromSearch } from '../utils';
+import { action, computed, makeObservable, observable, toJS } from 'mobx';
+import qs from 'qs';
+import { QUERY_PARAMS_VALIDATION_RULES } from '../config';
+import { TParamValue } from '../types/types';
 
-type PrivateFields = '_params' | '_search' | '_searchString' | '_filterValue';
+type PrivateFields = '_params' | '_searchParamsString';
 
-export default class QueryParamsStore {
-  private _searchString: string = '';
-  private _filterValue: string[] = [];
-  private _params: ParsedQs = {};
-  private _search: string = '';
+type TParams = Record<string, TParamValue>;
+
+const DEFAULT_PAGINATION_INITIAL_PAGE = 1;
+const INIT_PARAMS: TParams = {
+  titleSearch: '',
+  categoryIdList: [] as string[],
+  exceptProductIdList: [] as string[],
+  isInStock: null,
+  priceSort: null,
+  paginationPage: DEFAULT_PAGINATION_INITIAL_PAGE,
+  paginationLimit: null,
+  paginationItemsPerPage: null,
+};
+
+export default class TestStore2 {
+  private _params: TParams = { ...INIT_PARAMS };
+  private _searchParamsString: string = '';
 
   constructor() {
-    makeObservable<QueryParamsStore, PrivateFields>(this, {
+    makeObservable<TestStore2, PrivateFields>(this, {
+      _searchParamsString: observable,
       _params: observable.ref,
-      _search: observable,
-      _searchString: observable,
-      _filterValue: observable.ref,
-      getSearch: computed,
-      searchString: computed,
-      filterValue: computed,
       params: computed,
-      getParam: action,
-      setSearchString: action,
-      setSearch: action,
-      setParamEntity: action,
-      removeParamEntities: action,
+      searchParamsString: computed,
+      resetParams: action,
+      getParamValue: action,
+      setParamValue: action,
+      setSearchParamsString: action,
+      validateParamValue: action,
+      applyParamsToSearchString: action,
     });
   }
 
-  get getSearch() {
-    return this._search;
+  get searchParamsString(): string {
+    return this._searchParamsString;
   }
 
-  get searchString() {
-    return this._searchString;
-  }
-
-  get filterValue() {
-    return this._filterValue;
-  }
-
-  get params(): qs.ParsedQs {
+  get params(): TParams {
     return this._params;
   }
 
-  getParam = (key: string): string | ParsedQs | (string | ParsedQs)[] | null | undefined => {
+  resetParams = () => {
+    this._params = { ...INIT_PARAMS };
+  };
+
+  getParamValue = (key: keyof typeof this._params): TParamValue => {
     return this._params[key];
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setParamEntity = (key: string, rules: Record<string, any>[]) => {
-    const newParams = {
-      ...this._params,
-      [key]: rules.reduce(
-        (acc, f) => {
-          return { ...acc, ...f };
-        },
-        this._params[key] && Object.keys(this._params[key]).length ? (this._params[key] as object) : {},
-      ),
-    };
-    this._params = newParams;
-    const newSearchString = qs.stringify(this._params, { encode: false });
-    return newSearchString;
-  };
-
-  removeParamEntities = (keys: string[]) => {
-    for (const k of keys) {
-      delete this._params[k];
+  setParamValue = (key: keyof typeof this._params, value: TParamValue): void => {
+    if (Object.keys(this._params).includes(key)) {
+      this._params = { ...this._params, [key]: value };
     }
   };
 
-  setSearchString = (s: string) => {
-    this._searchString = s;
+  validateParamValue = (key: string, value: TParamValue): boolean => {
+    if (Object.keys(QUERY_PARAMS_VALIDATION_RULES).includes(key)) {
+      return QUERY_PARAMS_VALIDATION_RULES[key](value);
+    }
+    return false;
   };
 
-  setSearch = (search: string) => {
-    search = search.startsWith('?') ? search.slice(1) : search;
-    if (this._search !== search) {
-      this._search = search;
-      this._params = qs.parse(search);
-      this._searchString = getQueryStringFromSearch(this._params);
-      this._searchString = getQueryStringFromSearch(this._params);
-      this._filterValue = getSelectedCategoriesFromSearch(this._params);
+  applyParamsToSearchString = () => {
+    const searchStringsArray: string[] = [];
+    for (const [key, value] of Object.entries(this._params)) {
+      if (this.validateParamValue(key, value) && value !== '') {
+        searchStringsArray.push(qs.stringify({ [key]: value }, { encode: false, skipNulls: true }));
+      }
+    }
+    this._searchParamsString = searchStringsArray.length ? searchStringsArray.join('&') : '';
+    return this._searchParamsString;
+  };
+
+  setSearchParamsString = (searchParamsURL: string) => {
+    console.log('ЧИТАЮ ПАРАМЕТРЫ СТРОКИ', searchParamsURL);
+    const newSearchParamsString = searchParamsURL.startsWith('?') ? searchParamsURL.slice(1) : searchParamsURL;
+    if (newSearchParamsString !== this._searchParamsString) {
+      this.resetParams();
+      const paramsFromURL = qs.parse(newSearchParamsString) as TParams;
+      for (const [key, value] of Object.entries(paramsFromURL)) {
+        if (this.validateParamValue(key, value)) {
+          this._params[key] = value;
+        }
+      }
+      this._params = { ...this._params };
+      console.log('PARAMS', toJS(this._params));
+      this.applyParamsToSearchString();
     }
   };
 }
