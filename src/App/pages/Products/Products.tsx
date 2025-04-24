@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import styles from './Products.module.scss';
 import TitleBlock from 'components/TitleBlock';
 import FindBlock from './components/FindBlock/FindBlock';
@@ -19,36 +19,23 @@ export type TFilterOption = { key: string; value: string; type: 'category' | 'so
 const ITEMS_PER_PAGE = 9;
 
 const Products = observer(() => {
-  console.log('PAGE RERENDER');
-
   const navigate = useNavigate();
   const { search } = useLocation();
 
   const productsStore = useLocalStore(() => new ProductsListStore());
   const { categoryList } = rootStore.categories;
-  const { params, searchParamsString, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString } =
+  const { params, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString } =
     rootStore.query;
 
-  //Установка строки searchParams
+  //Установка строки searchParams и добавление количества карточек на странице
   useEffect(() => {
-    console.log('USE EFFECT1');
-    console.log(search);
-    let newSearchString = '';
-    if (productsStore && search !== undefined) {
+    if(search !== undefined) {
       setSearchParamsString(search);
-      setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
-      newSearchString = applyParamsToSearchString();
-      navigate({ search: newSearchString });
     }
-  }, [search]);
-
-  // Загрузка продуктов при изменении параметров поиска
-  useEffect(() => {
-    if (Object.keys(params).length && productsStore) {
-      productsStore.downloadProductList({ searchParams: params });
-      console.log('ПОМЕНЯЛИСЬ ПАРАМЕТРЫ', params);
-    }
-  }, [searchParamsString, productsStore]);
+    setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
+    const newSearchString = applyParamsToSearchString();
+    navigate({ search: newSearchString });
+  }, []);
 
   //Получение строки для фильтра
   const getTitle = useMemo(() => {
@@ -100,7 +87,6 @@ const Products = observer(() => {
           filterValue={categoryList
             .map((c) => convertCategoryToFilterOption(c))
             .filter((o) => {
-              console.log(params.categoryIdList);
               return (params.categoryIdList as string[]).includes(o.key);
             })}
           onFilterChange={(options) =>

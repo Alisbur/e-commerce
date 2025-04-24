@@ -4,7 +4,6 @@ import ProductCardList from 'components/ProductCardList';
 import Text from 'components/Text';
 import { useNavigate } from 'react-router';
 import { handleAddToCart } from 'utils';
-import { makeRelatedProductsSearchParams } from 'store/RootStore/utils';
 import { PAGE_ROUTES } from 'config/routes';
 import ProductListStore from 'store/local/ProductListStore';
 import { useLocalStore } from 'utils';
@@ -28,13 +27,11 @@ const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, pro
 
   useEffect(() => {
     if (productDocumentId && productCategoryDocumentId) {
-      const searchParams = makeRelatedProductsSearchParams(
-        productCategoryDocumentId,
-        productDocumentId,
-        RELATED_ITEMS_QUANTITY,
-      );
-
-      relatedStore.downloadProductList({ searchParams });
+      relatedStore.downloadProductList({searchParams : {
+        categoryIdList: [productCategoryDocumentId],
+        paginationLimit: RELATED_ITEMS_QUANTITY,
+        exceptProductIdList: [productDocumentId],
+      }});
     }
   }, [productDocumentId, productCategoryDocumentId, relatedStore]);
 

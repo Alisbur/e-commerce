@@ -1,19 +1,26 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { axiosInstance } from 'api/config/axios';
-import { API_ROUTES } from 'api/config/api-routes';
 import { DEFAULT_ERROR } from 'api/config/default-error';
 import { TErrorResponseApi, TResponse } from 'api/types/types';
+import { DETAILS_BASE_PARAMS } from 'api/config/detailsBaseParams';
+import { makeSearchParamsString } from 'store/RootStore/utils/makeSearchParamsString';
+import { TProductResponseApi } from 'store/models';
+import { TParams } from 'store/RootStore/types/types';
 
-export const getProductDetails = async <T>({
+export const getProductDetails = async <K extends keyof TParams>({
   documentId,
+  route,
   searchParams,
 }: {
   documentId: string;
-  searchParams: string;
-}): Promise<TResponse<T>> => {
+  route: string;
+  searchParams: Record<K, TParams[K]>;
+}): Promise<TResponse<TProductResponseApi>> => {
+  const searchString = makeSearchParamsString({ baseParams: DETAILS_BASE_PARAMS, extraParams: searchParams });
+
   try {
-    const { data }: AxiosResponse<T> = await axiosInstance.get<T>(`${API_ROUTES.products}/${documentId}`, {
-      params: { s: searchParams },
+    const { data }: AxiosResponse<TProductResponseApi> = await axiosInstance.get(`${route}/${documentId}`, {
+      params: { s: searchString },
       paramsSerializer: ({ s }) => s,
     });
     return { data, error: null };

@@ -1,11 +1,9 @@
-import { action, computed, makeObservable, observable, toJS } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import qs from 'qs';
 import { QUERY_PARAMS_VALIDATION_RULES } from '../config';
-import { TParamValue } from '../types/types';
+import { TParams } from '../types/types';
 
 type PrivateFields = '_params' | '_searchParamsString';
-
-type TParams = Record<string, TParamValue>;
 
 const DEFAULT_PAGINATION_INITIAL_PAGE = 1;
 const INIT_PARAMS: TParams = {
@@ -19,12 +17,12 @@ const INIT_PARAMS: TParams = {
   paginationItemsPerPage: null,
 };
 
-export default class TestStore2 {
+export default class QueryParamsStore {
   private _params: TParams = { ...INIT_PARAMS };
   private _searchParamsString: string = '';
 
   constructor() {
-    makeObservable<TestStore2, PrivateFields>(this, {
+    makeObservable<QueryParamsStore, PrivateFields>(this, {
       _searchParamsString: observable,
       _params: observable.ref,
       params: computed,
@@ -46,31 +44,31 @@ export default class TestStore2 {
     return this._params;
   }
 
-  resetParams = () => {
+  resetParams = (): void => {
     this._params = { ...INIT_PARAMS };
   };
 
-  getParamValue = (key: keyof typeof this._params): TParamValue => {
+  getParamValue = <K extends keyof TParams>(key: K): TParams[K] => {
     return this._params[key];
   };
 
-  setParamValue = (key: keyof typeof this._params, value: TParamValue): void => {
+  setParamValue = <K extends keyof TParams>(key: K, value: TParams[K]): void => {
     if (Object.keys(this._params).includes(key)) {
       this._params = { ...this._params, [key]: value };
     }
   };
 
-  validateParamValue = (key: string, value: TParamValue): boolean => {
+  validateParamValue = <K extends keyof TParams>(key: K, value: TParams[K]): boolean => {
     if (Object.keys(QUERY_PARAMS_VALIDATION_RULES).includes(key)) {
       return QUERY_PARAMS_VALIDATION_RULES[key](value);
     }
     return false;
   };
 
-  applyParamsToSearchString = () => {
+  applyParamsToSearchString = <K extends keyof TParams>(): string => {
     const searchStringsArray: string[] = [];
-    for (const [key, value] of Object.entries(this._params)) {
-      if (this.validateParamValue(key, value) && value !== '') {
+    for (const [key, value] of Object.entries(this._params) as [K, TParams[K]][]) {
+      if (value && this.validateParamValue(key, value)) {
         searchStringsArray.push(qs.stringify({ [key]: value }, { encode: false, skipNulls: true }));
       }
     }
@@ -78,19 +76,16 @@ export default class TestStore2 {
     return this._searchParamsString;
   };
 
-  setSearchParamsString = (searchParamsURL: string) => {
-    console.log('ЧИТАЮ ПАРАМЕТРЫ СТРОКИ', searchParamsURL);
+  setSearchParamsString = <K extends keyof TParams>(searchParamsURL: string): void => {
     const newSearchParamsString = searchParamsURL.startsWith('?') ? searchParamsURL.slice(1) : searchParamsURL;
     if (newSearchParamsString !== this._searchParamsString) {
       this.resetParams();
-      const paramsFromURL = qs.parse(newSearchParamsString) as TParams;
-      for (const [key, value] of Object.entries(paramsFromURL)) {
+      const paramsFromURL: Record<K, TParams[K]> = qs.parse(newSearchParamsString) as Record<K, TParams[K]>;
+      for (const [key, value] of Object.entries(paramsFromURL) as [K, TParams[K]][]) {
         if (this.validateParamValue(key, value)) {
           this._params[key] = value;
         }
       }
-      this._params = { ...this._params };
-      console.log('PARAMS', toJS(this._params));
       this.applyParamsToSearchString();
     }
   };

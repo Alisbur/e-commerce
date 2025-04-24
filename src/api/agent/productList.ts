@@ -6,16 +6,16 @@ import { TErrorResponseApi } from 'api/types/types';
 import { TProductListResponseApi } from 'store/models';
 import { PRODUCT_LIST_BASE_PARAMS } from 'api/config/productListBaseParams';
 import { makeSearchParamsString } from 'store/RootStore/utils/makeSearchParamsString';
+import { TParams } from 'store/RootStore/types/types';
 
-export const getProductList = async ({
+export const getProductList = async <K extends keyof TParams>({
   route,
   searchParams,
 }: {
   route: string;
-  searchParams: Record<string, string | string[] | number | number[] | boolean | undefined | null>;
+  searchParams: Record<K, TParams[K]>;
 }): Promise<TResponse<TProductListResponseApi>> => {
-  
-  const searchString = makeSearchParamsString(PRODUCT_LIST_BASE_PARAMS, searchParams);
+  const searchString = makeSearchParamsString({ baseParams: PRODUCT_LIST_BASE_PARAMS, extraParams: searchParams });
 
   try {
     const { data }: AxiosResponse<TProductListResponseApi> = await axiosInstance.get(route, {

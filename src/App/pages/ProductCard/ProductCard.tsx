@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router';
 import styles from './ProductCard.module.scss';
 import BackButton from 'components/BackButton';
@@ -7,21 +7,27 @@ import Button from 'components/Button';
 import ProductDetails from './components/ProductDetails';
 import RelatedProducts from './components/RelatedProducts';
 import { handleAddToCart, handleBuyNow } from 'utils';
-import { makeProductDetailsSearchParams } from 'store/RootStore/utils';
 import ProductDetailsStore from 'store/local/ProductDetailsStore';
 import { useLocalStore } from 'utils';
 import { observer } from 'mobx-react-lite';
+import rootStore from 'store/RootStore';
 
 const ProductCard = observer(() => {
   const { documentId } = useParams();
   const navigate = useNavigate();
-
   const productStore = useLocalStore(() => new ProductDetailsStore());
+  const {search} = useLocation();
+  const {setSearchParamsString} = rootStore.query;
+
+  useEffect(() => {
+    if(search !== undefined) {
+      setSearchParamsString(search);
+    }
+  }, []);
 
   useEffect(() => {
     if (documentId) {
-      const searchParams = makeProductDetailsSearchParams();
-      productStore.downloadProductDetails({ documentId, searchParams });
+      productStore.downloadProductDetails({ documentId, searchParams: {} });
     }
   }, [documentId, productStore]);
 

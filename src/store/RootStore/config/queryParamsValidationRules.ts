@@ -1,12 +1,16 @@
-import { TParamValue } from "../types/types";
+import { TParams} from "../types/types";
 
-export const QUERY_PARAMS_VALIDATION_RULES: Record<string, (value: TParamValue) => boolean> = {
-  titleSearch: (value: TParamValue) => typeof value === 'string' && value.length > 0,
-  categoryIdList: (value: TParamValue) => Array.isArray(value) && value.length > 0,
-  isInStock: (value: TParamValue) => typeof value === 'boolean',
-  priceSort: (value: TParamValue) => value === 'asc' || value === 'desc',
-  exceptProductIdList: (value: TParamValue) => Array.isArray(value) && value.length > 0,
-  paginationPage: (value: TParamValue) => typeof value === 'number' && value > 0,
-  paginationLimit: (value: TParamValue) => typeof value === 'number' && value > 0,
-  paginationItemsPerPage: (value: TParamValue) => typeof value === 'number' && value > 0,
+type TObjValidations<T> = {
+  [key in keyof T]: (value: T[key]) => boolean;
+}
+
+export const QUERY_PARAMS_VALIDATION_RULES: TObjValidations<TParams> = {
+  titleSearch: (value) => typeof value === 'string' && value.length > 0,
+  categoryIdList: (value) => Array.isArray(value) && value.length > 0,
+  isInStock: (value) => value === true || value === false,
+  priceSort: (value) => value === 'asc' || value === 'desc',
+  exceptProductIdList: (value) => Array.isArray(value) && value.length > 0,
+  paginationPage: (value) => !isNaN(Number(value)) && Number(value) > 0,
+  paginationLimit: (value) => !isNaN(Number(value)) && Number(value) > 0,
+  paginationItemsPerPage: (value) => !isNaN(Number(value)) && Number(value) > 0,
 };

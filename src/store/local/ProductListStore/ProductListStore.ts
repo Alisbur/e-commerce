@@ -1,7 +1,7 @@
 import { getProductList } from 'api/agent';
 import { API_ROUTES } from 'api/config/api-routes';
 import { TResponse } from 'api/types/types';
-import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction, runInAction } from 'mobx';
 import {
   normalizeProductListResponse,
   TProductListResponseApi,
@@ -10,6 +10,8 @@ import {
 } from 'store/models';
 import { RequestStatus, ILocalStore } from 'utils';
 import { TPagination } from './types';
+import rootStore from 'store/RootStore';
+import { TParams } from 'store/RootStore/types/types';
 
 type TPrivateFields = '_productList' | '_requestStatus' | '_pagination' | '_isLoading';
 
@@ -49,7 +51,11 @@ export default class ProductListStore implements ILocalStore {
     return this._isLoading;
   }
 
-  async downloadProductList({ searchParams }: { searchParams: Record<string, string | string[] | number | number[] | boolean | undefined | null> }): Promise<void> {
+  downloadProductList = async <K extends keyof TParams>({
+    searchParams,
+  }: {
+    searchParams: Record<K, TParams[K]>;
+  }): Promise<void> => {
     this._requestStatus = RequestStatus.loading;
     this._isLoading = true;
     this._productList = [];
@@ -72,7 +78,16 @@ export default class ProductListStore implements ILocalStore {
       }
       this._isLoading = false;
     });
-  }
+  };
 
-  destroy(): void {}
+  destroy = (): void => {
+    this._qpReaction();
+  };
+
+  private readonly _qpReaction: IReactionDisposer = reaction(
+    () => rootStore.query.searchParamsString,
+    () => {
+      this.downloadProductList({ searchParams: rootStore.query.params });
+    },
+  );
 }

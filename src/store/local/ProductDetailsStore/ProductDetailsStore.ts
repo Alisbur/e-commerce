@@ -1,7 +1,9 @@
 import { getProductDetails } from 'api/agent';
+import { API_ROUTES } from 'api/config/api-routes';
 import { TResponse } from 'api/types/types';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { normalizeProductResponse, TProductResponseApi, TProductResponseModel, TProductModel } from 'store/models';
+import { TParams } from 'store/RootStore/types/types';
 import { RequestStatus } from 'utils';
 import { ILocalStore } from 'utils';
 
@@ -36,18 +38,19 @@ export default class ProductDetailsStore implements ILocalStore {
     return this._isLoading;
   }
 
-  async downloadProductDetails({
+ downloadProductDetails = async <K extends keyof TParams>({
     documentId,
     searchParams,
   }: {
     documentId: string;
-    searchParams: string;
-  }): Promise<void> {
+    searchParams: Record<K, TParams[K]>;
+  }): Promise<void> => {
     this._requestStatus = RequestStatus.loading;
     this._isLoading = true;
     this._productDetails = null;
 
-    const response: TResponse<TProductResponseApi> = await getProductDetails<TProductResponseApi>({
+    const response: TResponse<TProductResponseApi> = await getProductDetails({
+      route: API_ROUTES.products,
       documentId,
       searchParams,
     });

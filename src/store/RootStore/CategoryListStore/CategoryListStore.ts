@@ -7,8 +7,9 @@ import {
   TProductCategoriesResponseModel,
   TProductCategoryModel,
 } from 'store/models';
-import { RequestStatus} from 'utils';
+import { RequestStatus } from 'utils';
 import { API_ROUTES } from 'api/config/api-routes';
+import { TParams } from '../types/types';
 
 type Pagination = {
   page: number | null;
@@ -55,7 +56,7 @@ export default class CategoryListStore {
     return this._isLoading;
   }
 
-  async downloadCategoryList({ searchParams }: { searchParams: string }): Promise<void> {
+  downloadCategoryList = async <K extends keyof TParams>({ searchParams }: { searchParams: Record<K, TParams[K]> }): Promise<void> => {
     this._requestStatus = RequestStatus.loading;
     this._isLoading = true;
     this._categoryList = [];
@@ -81,13 +82,13 @@ export default class CategoryListStore {
         this._requestStatus = RequestStatus.success;
       }
     });
-  }
+  };
 
   destroy(): void {
     this._autorunDisposer();
-  };
+  }
 
   private readonly _autorunDisposer: IReactionDisposer = autorun(() => {
-    this.downloadCategoryList({searchParams: ''});
+    this.downloadCategoryList({ searchParams: {} });
   });
 }
