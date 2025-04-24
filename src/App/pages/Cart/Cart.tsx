@@ -1,11 +1,21 @@
 import styles from './Cart.module.scss';
 import Text from 'components/Text';
 import BackButton from 'components/BackButton';
-import { useNavigate } from 'react-router';
-import { FC } from 'react';
+import { useLocation, useNavigate } from 'react-router';
+import { FC, useEffect } from 'react';
+import rootStore from 'store/RootStore';
 
 const Cart: FC = () => {
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const {setSearchParamsString} = rootStore.query;
+
+  useEffect(() => {
+    if (search !== undefined) {
+      setSearchParamsString(search);
+    }
+  }, [search, setSearchParamsString]);
+
 
   return (
     <div className={styles.wrapper}>
