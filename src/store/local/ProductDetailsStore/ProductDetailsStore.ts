@@ -38,7 +38,7 @@ export default class ProductDetailsStore implements ILocalStore {
     return this._isLoading;
   }
 
- downloadProductDetails = async <K extends keyof TParams>({
+  downloadProductDetails = async <K extends keyof TParams>({
     documentId,
     searchParams,
   }: {
@@ -69,7 +69,7 @@ export default class ProductDetailsStore implements ILocalStore {
         console.log(response.error.error.status, response.error.error.details);
       }
     });
-  }
+  };
 
   destroy(): void {}
 }

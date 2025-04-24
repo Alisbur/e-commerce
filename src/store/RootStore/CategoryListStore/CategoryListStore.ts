@@ -56,7 +56,11 @@ export default class CategoryListStore {
     return this._isLoading;
   }
 
-  downloadCategoryList = async <K extends keyof TParams>({ searchParams }: { searchParams: Record<K, TParams[K]> }): Promise<void> => {
+  downloadCategoryList = async <K extends keyof TParams>({
+    searchParams,
+  }: {
+    searchParams: Record<K, TParams[K]>;
+  }): Promise<void> => {
     this._requestStatus = RequestStatus.loading;
     this._isLoading = true;
     this._categoryList = [];

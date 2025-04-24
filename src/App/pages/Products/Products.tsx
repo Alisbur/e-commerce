@@ -21,21 +21,19 @@ const ITEMS_PER_PAGE = 9;
 const Products = observer(() => {
   const navigate = useNavigate();
   const { search } = useLocation();
-
   const productsStore = useLocalStore(() => new ProductsListStore());
   const { categoryList } = rootStore.categories;
-  const { params, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString } =
-    rootStore.query;
+  const { params, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString } = rootStore.query;
 
-  //Установка строки searchParams и добавление количества карточек на странице
+  //Установка строки searchParams и параметра количества карточек на странице
   useEffect(() => {
-    if(search !== undefined) {
+    if (search !== undefined) {
       setSearchParamsString(search);
     }
     setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
     const newSearchString = applyParamsToSearchString();
     navigate({ search: newSearchString });
-  }, []);
+  }, [applyParamsToSearchString, navigate, search, setParamValue, setSearchParamsString]);
 
   //Получение строки для фильтра
   const getTitle = useMemo(() => {

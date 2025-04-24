@@ -1,8 +1,8 @@
-import { TParams} from "../types/types";
+import { TParams } from '../types/types';
 
 type TObjValidations<T> = {
   [key in keyof T]: (value: T[key]) => boolean;
-}
+};
 
 export const QUERY_PARAMS_VALIDATION_RULES: TObjValidations<TParams> = {
   titleSearch: (value) => typeof value === 'string' && value.length > 0,

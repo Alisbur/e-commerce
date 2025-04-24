@@ -1,8 +1,8 @@
-import { TParams } from "../types/types";
+import { TParams } from '../types/types';
 
 type TObjConvertRules<T> = {
   [key in keyof T]: (value: T[key]) => object;
-}
+};
 
 export const QUERY_PARAMS_CONVERT_RULES: TObjConvertRules<TParams> = {
   titleSearch: (value) => ({ filters: { title: { $containsi: value } } }),

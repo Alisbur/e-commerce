@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import qs from 'qs';
 import { QUERY_PARAMS_VALIDATION_RULES } from '../config';
 import { TParams } from '../types/types';
+import { stringifySearchParams, parseSearchParams } from '../utils';
 
 type PrivateFields = '_params' | '_searchParamsString';
 
@@ -69,7 +69,7 @@ export default class QueryParamsStore {
     const searchStringsArray: string[] = [];
     for (const [key, value] of Object.entries(this._params) as [K, TParams[K]][]) {
       if (value && this.validateParamValue(key, value)) {
-        searchStringsArray.push(qs.stringify({ [key]: value }, { encode: false, skipNulls: true }));
+        searchStringsArray.push(stringifySearchParams({ [key]: value }));
       }
     }
     this._searchParamsString = searchStringsArray.length ? searchStringsArray.join('&') : '';
@@ -80,7 +80,7 @@ export default class QueryParamsStore {
     const newSearchParamsString = searchParamsURL.startsWith('?') ? searchParamsURL.slice(1) : searchParamsURL;
     if (newSearchParamsString !== this._searchParamsString) {
       this.resetParams();
-      const paramsFromURL: Record<K, TParams[K]> = qs.parse(newSearchParamsString) as Record<K, TParams[K]>;
+      const paramsFromURL: Record<K, TParams[K]> = parseSearchParams(newSearchParamsString) as Record<K, TParams[K]>;
       for (const [key, value] of Object.entries(paramsFromURL) as [K, TParams[K]][]) {
         if (this.validateParamValue(key, value)) {
           this._params[key] = value;

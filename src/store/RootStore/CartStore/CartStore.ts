@@ -59,7 +59,6 @@
 //     if(this._cart.products.)
 //   }
 
-
 //   get categoryList(): TProductCategoryModel[] {
 //     return this._categoryList;
 //   }

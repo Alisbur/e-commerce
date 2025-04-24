@@ -16,14 +16,14 @@ const ProductCard = observer(() => {
   const { documentId } = useParams();
   const navigate = useNavigate();
   const productStore = useLocalStore(() => new ProductDetailsStore());
-  const {search} = useLocation();
-  const {setSearchParamsString} = rootStore.query;
+  const { search } = useLocation();
+  const { setSearchParamsString } = rootStore.query;
 
   useEffect(() => {
-    if(search !== undefined) {
+    if (search !== undefined) {
       setSearchParamsString(search);
     }
-  }, []);
+  }, [search, setSearchParamsString]);
 
   useEffect(() => {
     if (documentId) {

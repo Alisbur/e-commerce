@@ -27,11 +27,13 @@ const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, pro
 
   useEffect(() => {
     if (productDocumentId && productCategoryDocumentId) {
-      relatedStore.downloadProductList({searchParams : {
-        categoryIdList: [productCategoryDocumentId],
-        paginationLimit: RELATED_ITEMS_QUANTITY,
-        exceptProductIdList: [productDocumentId],
-      }});
+      relatedStore.downloadProductList({
+        searchParams: {
+          categoryIdList: [productCategoryDocumentId],
+          paginationLimit: RELATED_ITEMS_QUANTITY,
+          exceptProductIdList: [productDocumentId],
+        },
+      });
     }
   }, [productDocumentId, productCategoryDocumentId, relatedStore]);
 
