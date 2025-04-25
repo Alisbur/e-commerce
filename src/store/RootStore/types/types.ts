@@ -2,7 +2,9 @@ export type TParams = {
   titleSearch: string;
   categoryIdList: string[];
   exceptProductIdList: string[];
-  isInStock: boolean | null;
+  isInStock: 'true' | null;
+  discountPercentSort: 'asc' | 'desc' | null;
+  ratingSort: 'asc' | 'desc' | null;
   priceSort: 'asc' | 'desc' | null;
   paginationPage: number;
   paginationLimit: number | null;

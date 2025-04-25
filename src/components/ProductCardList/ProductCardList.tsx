@@ -41,7 +41,7 @@ const ProductCardList: FC<ProductCardListProps> = ({ products, isLoading, addToC
             captionSlot={p.productCategory?.title}
             title={p.title}
             subtitle={p.description}
-            contentSlot={`$${p.price.toFixed(2)}`}
+            contentSlot={`${p.price.toFixed(2)} (disc. - ${Number(p.discountPercent)}%)`}
             actionSlot={<Button onClick={() => addToCart(p.id)}>Add to Cart</Button>}
             onClick={() => onCardClick(p.documentId)}
           />
