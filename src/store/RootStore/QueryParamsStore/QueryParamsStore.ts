@@ -11,6 +11,8 @@ const INIT_PARAMS: TParams = {
   categoryIdList: [] as string[],
   exceptProductIdList: [] as string[],
   isInStock: null,
+  discountPercentSort: null,
+  ratingSort: null,
   priceSort: null,
   paginationPage: DEFAULT_PAGINATION_INITIAL_PAGE,
   paginationLimit: null,

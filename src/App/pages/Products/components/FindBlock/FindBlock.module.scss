@@ -18,3 +18,9 @@
 .filter {
   width: 300px;
 }
+
+.extraFilters {
+  display: flex;
+  align-items: center;
+  gap: v.$space-xl;
+}

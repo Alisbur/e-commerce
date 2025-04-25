@@ -13,16 +13,23 @@ import ProductsListStore from 'store/local/ProductListStore';
 import { observer } from 'mobx-react-lite';
 import rootStore from 'store/RootStore';
 import { convertCategoryToFilterOption } from 'utils';
-import { PRODUCTS_PER_PAGE } from './constants/constants';
+import { SORT_OPTIONS, PRODUCTS_PER_PAGE } from './constants/constants';
+import { TParams } from 'store/RootStore/types/types';
 
-export type TFilterOption = { key: string; value: string; type: 'category' | 'sort' };
+export type TFilterOption = {
+  key: string;
+  value: string;
+  paramName?: keyof TParams;
+  paramValue?: TParams[keyof TParams];
+};
 
 const Products = observer(() => {
   const navigate = useNavigate();
   const { search } = useLocation();
   const productsStore = useLocalStore(() => new ProductsListStore());
   const { categoryList } = rootStore.categories;
-  const { params, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString } = rootStore.query;
+  const { params, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString, resetParams } =
+    rootStore.query;
 
   //Установка строки searchParams и параметра количества карточек на странице
   useEffect(() => {
@@ -35,7 +42,7 @@ const Products = observer(() => {
   }, [applyParamsToSearchString, navigate, search, setParamValue, setSearchParamsString]);
 
   //Получение строки для фильтра
-  const getTitle = useMemo(() => {
+  const getFilterTitle = useMemo(() => {
     return () => {
       if (Array.isArray(params.categoryIdList) && params.categoryIdList.length) {
         return params.categoryIdList.length === 1
@@ -45,6 +52,21 @@ const Products = observer(() => {
       } else return 'Categories filter';
     };
   }, [params.categoryIdList, categoryList]);
+
+  //Получение строки для сортировки
+  const getSortTitle = useMemo(() => {
+    return () => {
+      const selectedSortsArr: string[] = [];
+      SORT_OPTIONS.forEach((so) => {
+        if (so.paramName && so.paramValue && so.paramValue === getParamValue(so.paramName)) {
+          selectedSortsArr.push(so.value);
+        }
+      });
+      if (!selectedSortsArr.length) return 'Choise sorts';
+      if (selectedSortsArr.length === 1) return selectedSortsArr[0];
+      return `Selected sorts - ${selectedSortsArr.length}`;
+    };
+  }, [getParamValue]);
 
   //Переход к странице пагинации n
   const handleGoToPage = useCallback(
@@ -70,6 +92,11 @@ const Products = observer(() => {
     navigate(PAGE_ROUTES.product.create(documentId));
   };
 
+  //Сброс параметров поиска
+  const handleResetSearch = useCallback(() => {
+    resetParams();
+  }, [resetParams]);
+
   return (
     <main className={styles.wrapper}>
       <div className={styles.content}>
@@ -92,8 +119,20 @@ const Products = observer(() => {
               options.map((o) => o.key),
             )
           }
-          getTitle={getTitle}
+          getFilterTitle={getFilterTitle}
+          sortOptions={SORT_OPTIONS}
+          sortValue={SORT_OPTIONS.filter((o) =>
+            o.paramName && o.paramValue ? params[o.paramName] === o.paramValue : false,
+          )}
+          onSortChange={([option]) => {
+            if (option.paramName && option.paramValue) {
+              const prevValue = getParamValue(option.paramName);
+              setParamValue(option.paramName, prevValue !== option.paramValue ? option.paramValue : null);
+            }
+          }}
+          getSortTitle={getSortTitle}
           onFind={handleSearch}
+          onReset={handleResetSearch}
         />
         <TotalBlock title="Total products" total={productsStore.pagination?.total ?? 0} />
         <ProductCardList
