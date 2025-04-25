@@ -1,4 +1,4 @@
-import { TProductImageFormatApi, TProductImageFormatModel } from './ProductImageFormat';
+import { TProductImageFormatApi, TProductImageFormatModel } from './productImageFormat';
 
 export type TProductImageFormatsApi = {
   large?: TProductImageFormatApi;
