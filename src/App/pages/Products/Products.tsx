@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import styles from './Products.module.scss';
 import TitleBlock from 'components/TitleBlock';
 import FindBlock from './components/FindBlock/FindBlock';
-import TotalBlock from './components/TotalBlock';
+import TotalBlock from '../../../components/TotalBlock';
 import Pagination from 'components/Pagination';
 import ProductCardList from 'components/ProductCardList';
 import { useLocation, useNavigate } from 'react-router';
@@ -13,10 +13,9 @@ import ProductsListStore from 'store/local/ProductListStore';
 import { observer } from 'mobx-react-lite';
 import rootStore from 'store/RootStore';
 import { convertCategoryToFilterOption } from 'utils';
+import { PRODUCTS_PER_PAGE } from './constants/constants';
 
 export type TFilterOption = { key: string; value: string; type: 'category' | 'sort' };
-
-const ITEMS_PER_PAGE = 9;
 
 const Products = observer(() => {
   const navigate = useNavigate();
@@ -30,7 +29,7 @@ const Products = observer(() => {
     if (search !== undefined) {
       setSearchParamsString(search);
     }
-    setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
+    setParamValue('paginationItemsPerPage', PRODUCTS_PER_PAGE);
     const newSearchString = applyParamsToSearchString();
     navigate({ search: newSearchString });
   }, [applyParamsToSearchString, navigate, search, setParamValue, setSearchParamsString]);
@@ -51,7 +50,7 @@ const Products = observer(() => {
   const handleGoToPage = useCallback(
     (n: number) => {
       setParamValue('paginationPage', n);
-      setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
+      setParamValue('paginationItemsPerPage', PRODUCTS_PER_PAGE);
       const newSearchURL = applyParamsToSearchString();
       navigate({ search: newSearchURL });
     },
@@ -61,7 +60,7 @@ const Products = observer(() => {
   //Поиск по данным категорий и строке ввода
   const handleSearch = useCallback(() => {
     setParamValue('paginationPage', 1);
-    setParamValue('paginationItemsPerPage', ITEMS_PER_PAGE);
+    setParamValue('paginationItemsPerPage', PRODUCTS_PER_PAGE);
     const newSearchURL = applyParamsToSearchString();
     navigate({ search: `?${newSearchURL}` });
   }, [applyParamsToSearchString, setParamValue, navigate]);
@@ -96,7 +95,7 @@ const Products = observer(() => {
           getTitle={getTitle}
           onFind={handleSearch}
         />
-        <TotalBlock total={productsStore.pagination?.total ?? 0} />
+        <TotalBlock title='Total products' total={productsStore.pagination?.total ?? 0} />
         <ProductCardList
           products={productsStore.productList}
           addToCart={handleAddToCart}

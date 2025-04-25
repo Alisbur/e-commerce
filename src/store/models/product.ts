@@ -1,5 +1,5 @@
-import { normalizeProductImage, TProductImageApi, TProductImageModel } from './ProductImage';
-import { normalizeProductCategory, TProductCategoryApi, TProductCategoryModel } from './ProductCategory';
+import { normalizeProductImage, TProductImageApi, TProductImageModel } from './productImage';
+import { normalizeProductCategory, TProductCategoryApi, TProductCategoryModel } from './productCategory';
 import { normalizeId, TIdApi, TIdModel } from './id';
 
 export type TProductApi = {

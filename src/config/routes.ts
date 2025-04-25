@@ -8,8 +8,8 @@ export const PAGE_ROUTES = {
     create: () => '/products',
   },
   product: {
-    mask: '/product/:documentId',
-    create: (documentId: string) => `/product/${documentId}`,
+    mask: '/products/:documentId',
+    create: (documentId: string) => `/products/${documentId}`,
   },
   categories: {
     mask: '/categories',
@@ -21,7 +21,7 @@ export const PAGE_ROUTES = {
   },
   cart: {
     mask: '/cart',
-    create: () => `/categories`,
+    create: () => `/cart`,
   },
   account: {
     mask: '/account',
