@@ -8,7 +8,7 @@ import rootStore from 'store/RootStore';
 const NotFound: FC = () => {
   const navigate = useNavigate();
   const { search } = useLocation();
-  const {setSearchParamsString} = rootStore.query;
+  const { setSearchParamsString } = rootStore.query;
 
   useEffect(() => {
     if (search !== undefined) {

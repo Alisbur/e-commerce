@@ -13,8 +13,7 @@ import Pagination from 'components/Pagination';
 const Categories: FC = observer(() => {
   const navigate = useNavigate();
   const { search } = useLocation();
-  const { setSearchParamsString, setParamValue, resetParams, applyParamsToSearchString } =
-    rootStore.query;
+  const { setSearchParamsString, setParamValue, resetParams, applyParamsToSearchString } = rootStore.query;
   const { categoryList } = rootStore.categories;
   const [paginationPage, setPaginationPage] = useState(1);
 

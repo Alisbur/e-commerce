@@ -95,7 +95,7 @@ const Products = observer(() => {
           getTitle={getTitle}
           onFind={handleSearch}
         />
-        <TotalBlock title='Total products' total={productsStore.pagination?.total ?? 0} />
+        <TotalBlock title="Total products" total={productsStore.pagination?.total ?? 0} />
         <ProductCardList
           products={productsStore.productList}
           addToCart={handleAddToCart}

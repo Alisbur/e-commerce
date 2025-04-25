@@ -8,14 +8,13 @@ import rootStore from 'store/RootStore';
 const Cart: FC = () => {
   const navigate = useNavigate();
   const { search } = useLocation();
-  const {setSearchParamsString} = rootStore.query;
+  const { setSearchParamsString } = rootStore.query;
 
   useEffect(() => {
     if (search !== undefined) {
       setSearchParamsString(search);
     }
   }, [search, setSearchParamsString]);
-
 
   return (
     <div className={styles.wrapper}>

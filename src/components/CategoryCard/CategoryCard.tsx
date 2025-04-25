@@ -16,13 +16,7 @@ export type CategoryCardProps = {
   onClick?: React.MouseEventHandler;
 };
 
-const CategoryCard: React.FC<CategoryCardProps> = ({
-  className,
-  image,
-  captionSlot = <></>,
-  title,
-  onClick,
-}) => {
+const CategoryCard: React.FC<CategoryCardProps> = ({ className, image, captionSlot = <></>, title, onClick }) => {
   const handleCardClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (onClick !== undefined) onClick(e);

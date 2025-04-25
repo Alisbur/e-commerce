@@ -14,8 +14,14 @@ type CategoryCardListProps = {
   isLoading: boolean;
 };
 
-const CategoryCardList: FC<CategoryCardListProps> = ({ categories, isLoading, startItem, maxItems, onCardClick, paginationSlot }) => {
-  
+const CategoryCardList: FC<CategoryCardListProps> = ({
+  categories,
+  isLoading,
+  startItem,
+  maxItems,
+  onCardClick,
+  paginationSlot,
+}) => {
   if (isLoading) return <Loader size="l" />;
 
   if (!Array.isArray(categories) || !categories.length)
@@ -24,9 +30,6 @@ const CategoryCardList: FC<CategoryCardListProps> = ({ categories, isLoading, st
         Что-то пошло не так... Перезагрузите страницу.
       </Text>
     );
-
-  console.log(categories.slice(2, maxItems))
-  console.log("SLICE")
 
   return (
     <section className={styles.wrapper}>
