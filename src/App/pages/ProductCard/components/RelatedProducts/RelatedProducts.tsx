@@ -3,7 +3,6 @@ import styles from './RelatedProducts.module.scss';
 import ProductCardList from 'components/ProductCardList';
 import Text from 'components/Text';
 import { useNavigate } from 'react-router';
-import { handleAddToCart } from 'utils';
 import { PAGE_ROUTES } from 'config/routes';
 import ProductListStore from 'store/local/ProductListStore';
 import { useLocalStore } from 'utils';
@@ -12,11 +11,12 @@ import { observer } from 'mobx-react-lite';
 type TRelatedProductsProps = {
   productDocumentId: string;
   productCategoryDocumentId: string;
+  addToCart: (documentId: string, price: number) => void;
 };
 
 const RELATED_ITEMS_QUANTITY = 3;
 
-const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId }) => {
+const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId, addToCart }) => {
   const relatedStore = useLocalStore(() => new ProductListStore());
 
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, pro
       </Text>
       <ProductCardList
         products={relatedStore.productList}
-        addToCart={handleAddToCart}
+        addToCart={addToCart}
         onCardClick={handleCardClick}
         isLoading={relatedStore.isLoading}
       />

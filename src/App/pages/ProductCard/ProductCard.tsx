@@ -62,6 +62,7 @@ const ProductCard = observer(() => {
           <RelatedProducts
             productDocumentId={documentId ?? ''}
             productCategoryDocumentId={productStore.productDetails.productCategory?.documentId ?? ''}
+            addToCart={addProductToCart}
           />
         )}
       </div>
