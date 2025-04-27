@@ -6,7 +6,7 @@ import BackButton from 'components/BackButton';
 import Button from 'components/Button';
 import ProductDetails from './components/ProductDetails';
 import RelatedProducts from './components/RelatedProducts';
-import { handleAddToCart, handleBuyNow } from 'utils';
+import { handleBuyNow } from 'utils';
 import ProductDetailsStore from 'store/local/ProductDetailsStore';
 import { useLocalStore } from 'utils';
 import { observer } from 'mobx-react-lite';
@@ -16,8 +16,10 @@ const ProductCard = observer(() => {
   const { documentId } = useParams();
   const navigate = useNavigate();
   const productStore = useLocalStore(() => new ProductDetailsStore());
+  const { productDetails } = productStore;
   const { search } = useLocation();
   const { setSearchParamsString } = rootStore.query;
+  const { addProductToCart } = rootStore.cart;
 
   useEffect(() => {
     if (search !== undefined) {
@@ -37,9 +39,12 @@ const ProductCard = observer(() => {
   }, [productStore]);
 
   const handleAddProductToCart = useCallback(() => {
-    const product = productStore.productDetails;
-    if (product?.id) handleAddToCart(product.id);
-  }, [productStore]);
+    const product = productDetails;
+    if (product) {
+      const { documentId, price } = product;
+      addProductToCart(documentId, price);
+    }
+  }, [productDetails, addProductToCart]);
 
   return (
     <section className={styles.wrapper}>

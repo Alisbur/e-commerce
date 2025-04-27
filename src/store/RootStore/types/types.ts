@@ -2,6 +2,7 @@ export type TParams = {
   titleSearch: string;
   categoryIdList: string[];
   exceptProductIdList: string[];
+  productIdList: string[];
   isInStock: 'true' | null;
   discountPercentSort: 'asc' | 'desc' | null;
   ratingSort: 'asc' | 'desc' | null;

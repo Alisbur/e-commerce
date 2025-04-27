@@ -10,6 +10,7 @@ export const QUERY_PARAMS_VALIDATION_RULES: TObjValidations<TParams> = {
   isInStock: (value) => typeof value === 'string' && value === 'true',
   priceSort: (value) => value === 'asc' || value === 'desc',
   exceptProductIdList: (value) => Array.isArray(value) && value.length > 0,
+  productIdList: (value) => Array.isArray(value) && value.length > 0,
   paginationPage: (value) => !isNaN(Number(value)) && Number(value) > 0,
   paginationLimit: (value) => !isNaN(Number(value)) && Number(value) > 0,
   paginationItemsPerPage: (value) => !isNaN(Number(value)) && Number(value) > 0,

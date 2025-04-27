@@ -10,6 +10,7 @@ const INIT_PARAMS: TParams = {
   titleSearch: '',
   categoryIdList: [] as string[],
   exceptProductIdList: [] as string[],
+  productIdList: [] as string[],
   isInStock: null,
   discountPercentSort: null,
   ratingSort: null,

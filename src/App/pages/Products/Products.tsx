@@ -6,7 +6,6 @@ import TotalBlock from '../../../components/TotalBlock';
 import Pagination from 'components/Pagination';
 import ProductCardList from 'components/ProductCardList';
 import { useLocation, useNavigate } from 'react-router';
-import { handleAddToCart } from 'utils';
 import { PAGE_ROUTES } from 'config/routes';
 import { useLocalStore } from 'utils';
 import ProductsListStore from 'store/local/ProductListStore';
@@ -30,6 +29,7 @@ const Products = observer(() => {
   const { categoryList } = rootStore.categories;
   const { params, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString, resetParams } =
     rootStore.query;
+  const { addProductToCart } = rootStore.cart;
 
   //Установка строки searchParams и параметра количества карточек на странице
   useEffect(() => {
@@ -96,6 +96,11 @@ const Products = observer(() => {
   const handleResetSearch = useCallback(() => {
     resetParams();
   }, [resetParams]);
+
+  //Добавление в корзину
+  const handleAddToCart = (documentId: string, price: number) => {
+    addProductToCart(documentId, price);
+  };
 
   return (
     <main className={styles.wrapper}>
