@@ -16,11 +16,10 @@ const ProductCard = observer(() => {
   const { documentId } = useParams();
   const navigate = useNavigate();
   const productStore = useLocalStore(() => new ProductDetailsStore());
-  const { productDetails} = productStore;
+  const { productDetails } = productStore;
   const { search } = useLocation();
   const { setSearchParamsString } = rootStore.query;
   const { addProductToCart } = rootStore.cart;
-
 
   useEffect(() => {
     if (search !== undefined) {
@@ -43,7 +42,8 @@ const ProductCard = observer(() => {
     const product = productDetails;
     if (product) {
       const { documentId, price } = product;
-      addProductToCart(documentId, price)};
+      addProductToCart(documentId, price);
+    }
   }, [productDetails, addProductToCart]);
 
   return (

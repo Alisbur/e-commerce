@@ -35,7 +35,7 @@ const Cart: FC = observer(() => {
     if (cartProductsList.length) {
       downloadCartProductList({ searchParams: { productIdList: cartProductsList } });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, setSearchParamsString, downloadCartProductList, resetProductList]);
 
   const handleIncQty = (documentId: string, price: number) => {

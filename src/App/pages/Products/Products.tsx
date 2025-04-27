@@ -29,7 +29,7 @@ const Products = observer(() => {
   const { categoryList } = rootStore.categories;
   const { params, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString, resetParams } =
     rootStore.query;
-  const {addProductToCart} = rootStore.cart;
+  const { addProductToCart } = rootStore.cart;
 
   //Установка строки searchParams и параметра количества карточек на странице
   useEffect(() => {
@@ -100,7 +100,7 @@ const Products = observer(() => {
   //Добавление в корзину
   const handleAddToCart = (documentId: string, price: number) => {
     addProductToCart(documentId, price);
-  }
+  };
 
   return (
     <main className={styles.wrapper}>
