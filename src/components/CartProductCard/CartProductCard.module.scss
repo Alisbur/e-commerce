@@ -1,0 +1,53 @@
+@use "styles/variables" as v;
+
+.card {
+  height: 200px;
+  width: 100%;
+  position: relative;
+  padding-right: v.$space-xxxl;
+  background-color: v.$card-bg;
+  display: flex;
+  align-items: center;
+  gap: v.$space-xxxl;
+  cursor: pointer;
+
+  &__header_image {
+    height: 100%;
+    object-fit: cover;
+    background-color: v.$card-image-bg;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-inline: v.$space-xs;
+    gap: v.$space-xxl;
+  }
+
+  &__content_about {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: v.$space-xxs;
+    width: 100%;
+    color: v.$text-secondary;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+  }
+
+  &__content_action {
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: v.$space-xxs;
+  }
+
+  &:hover {
+    box-shadow: v.$shadow;
+  }
+}

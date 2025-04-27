@@ -1,3 +1,11 @@
 .left {
   transform: scaleX(-1);
 }
+
+.up {
+  transform: rotate(-90deg);
+}
+
+.down {
+  transform: rotate(90deg);
+}

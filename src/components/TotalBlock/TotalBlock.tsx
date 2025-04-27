@@ -4,7 +4,7 @@ import Text from 'components/Text';
 
 type TTotalProps = {
   title: string;
-  total: number | undefined | null;
+  total: number | string | undefined | null;
 };
 
 const TotalBlock: FC<TTotalProps> = ({ title, total }) => {

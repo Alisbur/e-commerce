@@ -8,7 +8,7 @@ import { TProductModel } from 'store/models';
 
 type ProductCardListProps = {
   products: TProductModel[];
-  addToCart: (id: number) => void;
+  addToCart: (documentId: string, price: number) => void;
   onCardClick: (documentId: string) => void;
   paginationSlot?: ReactNode;
   isLoading: boolean;
@@ -42,7 +42,7 @@ const ProductCardList: FC<ProductCardListProps> = ({ products, isLoading, addToC
             title={p.title}
             subtitle={p.description}
             contentSlot={`${p.price.toFixed(2)} (disc. - ${Number(p.discountPercent)}%)`}
-            actionSlot={<Button onClick={() => addToCart(p.id)}>Add to Cart</Button>}
+            actionSlot={<Button onClick={() => addToCart(p.documentId, p.price)}>Add to Cart</Button>}
             onClick={() => onCardClick(p.documentId)}
           />
         ))}
