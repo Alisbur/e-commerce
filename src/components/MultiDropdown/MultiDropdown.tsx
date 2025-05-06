@@ -4,32 +4,26 @@ import Input from 'components/Input';
 import ArrowDownIcon from 'components/icons/ArrowDownIcon';
 import Text from 'components/Text';
 import styles from './MultiDropdown.module.scss';
-
-export type Option = {
-  /** Ключ варианта, используется для отправки на бек/использования в коде */
-  key: string;
-  /** Значение варианта, отображается пользователю */
-  value: string;
-};
+import { TFilterOption } from 'App/pages/Products';
 
 /** Пропсы, которые принимает компонент Dropdown */
 export type MultiDropdownProps = {
   className?: string;
   /** Массив возможных вариантов для выбора */
-  options: Option[];
+  options: TFilterOption[];
   /** Текущие выбранные значения поля, может быть пустым */
-  value: Option[];
+  value: TFilterOption[];
   /** Callback, вызываемый при выборе варианта */
-  onChange: (value: Option[]) => void;
+  onChange: (value: TFilterOption[]) => void;
   /** Заблокирован ли дропдаун */
   disabled?: boolean;
   /** Возвращает строку которая будет выводится в инпуте. В случае если опции не выбраны, строка должна отображаться как placeholder. */
-  getTitle: (value: Option[]) => string;
+  getTitle: (value: TFilterOption[]) => string;
 };
 
 const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, options, value, onChange, disabled, getTitle }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [filteredItems, setFilteredItems] = useState<Option[]>(options);
+  const [filteredItems, setFilteredItems] = useState<TFilterOption[]>(options);
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLDivElement>(null);
 
@@ -86,7 +80,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({ className, options, value
       />
       {isOpen && !disabled && (
         <div className={styles.options}>
-          {filteredItems.map((item: Option) => {
+          {filteredItems.map((item) => {
             const isSelected = value.some((el) => item.key === el.key);
 
             return (

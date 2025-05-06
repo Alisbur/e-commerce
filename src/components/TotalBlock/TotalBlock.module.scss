@@ -1,0 +1,16 @@
+@use "styles/variables" as v;
+@use "styles/mixins" as m;
+
+.total {
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: v.$space-xl;
+}
+
+.quantity {
+  @include m.setFont($fontSize: v.$fs-20, $lineHeight: v.$lh-20);
+}

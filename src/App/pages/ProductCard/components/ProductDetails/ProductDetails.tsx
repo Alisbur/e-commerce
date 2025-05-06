@@ -2,12 +2,12 @@ import { FC, ReactNode } from 'react';
 import styles from './ProductDetails.module.scss';
 import TitleBlock from 'components/TitleBlock/TitleBlock';
 import Text from 'components/Text';
-import { TProduct } from 'entities/types/types';
 import Loader from 'components/Loader';
 import Slider from 'components/Slider';
+import { TProductModel } from 'store/models';
 
 type TProductDetailsProps = {
-  product: TProduct;
+  product: TProductModel;
   children: ReactNode;
   isLoading: boolean;
 };

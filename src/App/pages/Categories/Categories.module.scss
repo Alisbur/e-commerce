@@ -1,11 +1,27 @@
 @use "styles/variables" as v;
 
+// .wrapper {
+//   width: 100%;
+//   padding-top: 200px;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+//   gap: v.$space-l;
+// }
+
 .wrapper {
   width: 100%;
-  padding-top: 200px;
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1440px;
+  padding: 100px 100px 113px 100px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: v.$space-l;
 }

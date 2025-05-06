@@ -1,83 +1,105 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import styles from './Products.module.scss';
-import { getProductList } from 'api/agent/list';
 import TitleBlock from 'components/TitleBlock';
 import FindBlock from './components/FindBlock/FindBlock';
-import { FILTER_OPTIONS } from './constants/constants';
-import { TProduct, TProductListResponse } from 'entities/types/types';
-import TotalBlock from './components/TotalBlock';
+import TotalBlock from '../../../components/TotalBlock';
 import Pagination from 'components/Pagination';
-import ProductCardsList from 'components/ProductCardsList';
-import { useNavigate } from 'react-router';
-import { handleAddToCart } from 'utils/cart';
-import { makeProductsListSearchParams } from 'api/utils';
+import ProductCardList from 'components/ProductCardList';
+import { useLocation, useNavigate } from 'react-router';
 import { PAGE_ROUTES } from 'config/routes';
+import { useLocalStore } from 'utils';
+import ProductsListStore from 'store/local/ProductListStore';
+import { observer } from 'mobx-react-lite';
+import rootStore from 'store/RootStore';
+import { convertCategoryToFilterOption } from 'utils';
+import { SORT_OPTIONS, PRODUCTS_PER_PAGE } from './constants/constants';
+import { TParams } from 'store/RootStore/types/types';
 
-export type TFilterOption = { key: string; value: string };
-
-type TPagination = {
-  page?: number | null;
-  pageSize?: number | null;
-  pageCount?: number | null;
-  total?: number | null;
+export type TFilterOption = {
+  key: string;
+  value: string;
+  paramName?: keyof TParams;
+  paramValue?: TParams[keyof TParams];
 };
 
-const paginationInitValue = {
-  page: null,
-  pageSize: null,
-  pageCount: null,
-  total: null,
-};
-
-const ITEMS_PER_PAGE = 9;
-
-const Products = () => {
-  const [searchString, setSearchString] = useState('');
-  const [filterValue, setFilterValue] = useState<TFilterOption[]>([]);
-  const [products, setProducts] = useState<TProduct[]>([]);
-  const [pagination, setPagination] = useState<TPagination>(paginationInitValue);
-  const [isLoading, setIsLoading] = useState(false);
+const Products = observer(() => {
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const productsStore = useLocalStore(() => new ProductsListStore());
+  const { categoryList } = rootStore.categories;
+  const { params, setSearchParamsString, getParamValue, setParamValue, applyParamsToSearchString, resetParams } =
+    rootStore.query;
+  const { addProductToCart } = rootStore.cart;
 
+  //Установка строки searchParams и параметра количества карточек на странице
   useEffect(() => {
-    const searchParams = makeProductsListSearchParams({ productsPerPage: ITEMS_PER_PAGE });
+    if (search !== undefined) {
+      setSearchParamsString(search);
+    }
+    setParamValue('paginationItemsPerPage', PRODUCTS_PER_PAGE);
+    const newSearchString = applyParamsToSearchString();
+    navigate({ search: newSearchString });
+  }, [applyParamsToSearchString, navigate, search, setParamValue, setSearchParamsString]);
 
-    setIsLoading(true);
-    getProductList({ searchParams })
-      .then((res: TProductListResponse) => {
-        setProducts(res.data);
-        setPagination(res.meta.pagination);
-      })
-      .catch((err: string) => console.log(err))
-      .finally(() => {
-        setIsLoading(false);
+  //Получение строки для фильтра
+  const getFilterTitle = useMemo(() => {
+    return () => {
+      if (Array.isArray(params.categoryIdList) && params.categoryIdList.length) {
+        return params.categoryIdList.length === 1
+          ? categoryList.find((c) => (params.categoryIdList as string[]).includes(c.documentId))?.title ||
+              'Categories filter'
+          : `Categories selected - ${params.categoryIdList.length}`;
+      } else return 'Categories filter';
+    };
+  }, [params.categoryIdList, categoryList]);
+
+  //Получение строки для сортировки
+  const getSortTitle = useMemo(() => {
+    return () => {
+      const selectedSortsArr: string[] = [];
+      SORT_OPTIONS.forEach((so) => {
+        if (so.paramName && so.paramValue && so.paramValue === getParamValue(so.paramName)) {
+          selectedSortsArr.push(so.value);
+        }
       });
-  }, []);
+      if (!selectedSortsArr.length) return 'Choise sorts';
+      if (selectedSortsArr.length === 1) return selectedSortsArr[0];
+      return `Selected sorts - ${selectedSortsArr.length}`;
+    };
+  }, [getParamValue]);
 
-  //Получение значения для фильтра
-  const getTitle = useMemo(() => {
-    return (): string =>
-      filterValue.length
-        ? Object.values(filterValue)
-            .map((v) => v.value)
-            .join(' ')
-        : 'Filter';
-  }, [filterValue]);
+  //Переход к странице пагинации n
+  const handleGoToPage = useCallback(
+    (n: number) => {
+      setParamValue('paginationPage', n);
+      setParamValue('paginationItemsPerPage', PRODUCTS_PER_PAGE);
+      const newSearchURL = applyParamsToSearchString();
+      navigate({ search: newSearchURL });
+    },
+    [navigate, setParamValue, applyParamsToSearchString],
+  );
 
-  //Заглушка для перехода на следующую страницу пагинации
-  const handleNextPage = () => {};
+  //Поиск по данным категорий и строке ввода
+  const handleSearch = useCallback(() => {
+    setParamValue('paginationPage', 1);
+    setParamValue('paginationItemsPerPage', PRODUCTS_PER_PAGE);
+    const newSearchURL = applyParamsToSearchString();
+    navigate({ search: `?${newSearchURL}` });
+  }, [applyParamsToSearchString, setParamValue, navigate]);
 
-  //Заглушка для перехода на предыдущую страницу пагинации
-  const handlePrevPage = () => {};
-
-  //Заглушка для перехода к указанной странице пагинации
-  const handleNGotoPage = (n: number) => n;
-
-  //Заглушка для поиска
-  const handleSearch = () => {};
-
+  //Навигация при клике на карточку
   const handleCardClick = (documentId: string) => {
     navigate(PAGE_ROUTES.product.create(documentId));
+  };
+
+  //Сброс параметров поиска
+  const handleResetSearch = useCallback(() => {
+    resetParams();
+  }, [resetParams]);
+
+  //Добавление в корзину
+  const handleAddToCart = (documentId: string, price: number) => {
+    addProductToCart(documentId, price);
   };
 
   return (
@@ -88,35 +110,54 @@ const Products = () => {
           name of the item
         </TitleBlock>
         <FindBlock
-          searchString={searchString}
-          onSearchStringChange={setSearchString}
-          filterOptions={FILTER_OPTIONS}
-          filterValue={filterValue}
-          onFilterChange={setFilterValue}
-          getTitle={getTitle}
+          searchString={getParamValue('titleSearch') as string}
+          onSearchStringChange={(s) => setParamValue('titleSearch', s)}
+          filterOptions={categoryList.map((c) => convertCategoryToFilterOption(c))}
+          filterValue={categoryList
+            .map((c) => convertCategoryToFilterOption(c))
+            .filter((o) => {
+              return (params.categoryIdList as string[]).includes(o.key);
+            })}
+          onFilterChange={(options) =>
+            setParamValue(
+              'categoryIdList',
+              options.map((o) => o.key),
+            )
+          }
+          getFilterTitle={getFilterTitle}
+          sortOptions={SORT_OPTIONS}
+          sortValue={SORT_OPTIONS.filter((o) =>
+            o.paramName && o.paramValue ? params[o.paramName] === o.paramValue : false,
+          )}
+          onSortChange={([option]) => {
+            if (option.paramName && option.paramValue) {
+              const prevValue = getParamValue(option.paramName);
+              setParamValue(option.paramName, prevValue !== option.paramValue ? option.paramValue : null);
+            }
+          }}
+          getSortTitle={getSortTitle}
           onFind={handleSearch}
+          onReset={handleResetSearch}
         />
-        <TotalBlock total={pagination.total} />
-        <ProductCardsList
-          products={products}
+        <TotalBlock title="Total products" total={productsStore.pagination?.total ?? 0} />
+        <ProductCardList
+          products={productsStore.productList}
           addToCart={handleAddToCart}
           onCardClick={handleCardClick}
           paginationSlot={
-            pagination.pageCount && pagination.pageCount > 1 ? (
+            productsStore.pagination?.pageCount && productsStore.pagination.pageCount > 1 ? (
               <Pagination
-                page={pagination.page}
-                pageCount={pagination.pageCount}
-                next={handleNextPage}
-                prev={handlePrevPage}
-                goTo={handleNGotoPage}
+                page={productsStore.pagination?.page}
+                pageCount={productsStore.pagination?.pageCount}
+                goTo={handleGoToPage}
               />
             ) : undefined
           }
-          isLoading={isLoading}
+          isLoading={productsStore.isLoading}
         />
       </div>
     </main>
   );
-};
+});
 
 export default Products;

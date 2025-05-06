@@ -1,24 +1,23 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import styles from './RelatedProducts.module.scss';
-import ProductCardsList from 'components/ProductCardsList';
-import { TProduct, TProductListResponse } from 'entities/types/types';
-import { getProductList } from 'api/agent/list';
+import ProductCardList from 'components/ProductCardList';
 import Text from 'components/Text';
 import { useNavigate } from 'react-router';
-import { handleAddToCart } from 'utils/cart';
-import { makeRelatedProductsSearchParams } from 'api/utils';
 import { PAGE_ROUTES } from 'config/routes';
+import ProductListStore from 'store/local/ProductListStore';
+import { useLocalStore } from 'utils';
+import { observer } from 'mobx-react-lite';
 
 type TRelatedProductsProps = {
   productDocumentId: string;
   productCategoryDocumentId: string;
+  addToCart: (documentId: string, price: number) => void;
 };
 
 const RELATED_ITEMS_QUANTITY = 3;
 
-const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId }) => {
-  const [relatedIsLoading, setrelatedIsLoading] = useState(false);
-  const [related, setRelated] = useState<TProduct[]>([]);
+const RelatedProductsList: FC<TRelatedProductsProps> = ({ productDocumentId, productCategoryDocumentId, addToCart }) => {
+  const relatedStore = useLocalStore(() => new ProductListStore());
 
   const navigate = useNavigate();
 
@@ -28,37 +27,31 @@ const RelatedProducts: FC<TRelatedProductsProps> = ({ productDocumentId, product
 
   useEffect(() => {
     if (productDocumentId && productCategoryDocumentId) {
-      const searchParams = makeRelatedProductsSearchParams({
-        productCategoryDocumentId,
-        productDocumentId,
-        quantity: RELATED_ITEMS_QUANTITY,
+      relatedStore.downloadProductList({
+        searchParams: {
+          categoryIdList: [productCategoryDocumentId],
+          paginationLimit: RELATED_ITEMS_QUANTITY,
+          exceptProductIdList: [productDocumentId],
+        },
       });
-
-      setrelatedIsLoading(true);
-      getProductList({ searchParams })
-        .then((res: TProductListResponse) => {
-          setRelated(res.data);
-        })
-        .catch((err: string) => console.log(err))
-        .finally(() => {
-          setrelatedIsLoading(false);
-        });
     }
-  }, [productDocumentId, productCategoryDocumentId]);
+  }, [productDocumentId, productCategoryDocumentId, relatedStore]);
 
   return (
     <div className={styles.wrapper}>
       <Text view="subtitle" tag="h2" className={styles.title}>
         Related Items
       </Text>
-      <ProductCardsList
-        products={related}
-        addToCart={handleAddToCart}
+      <ProductCardList
+        products={relatedStore.productList}
+        addToCart={addToCart}
         onCardClick={handleCardClick}
-        isLoading={relatedIsLoading}
+        isLoading={relatedStore.isLoading}
       />
     </div>
   );
 };
+
+const RelatedProducts = observer(RelatedProductsList);
 
 export default RelatedProducts;

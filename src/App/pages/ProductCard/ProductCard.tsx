@@ -1,59 +1,73 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useCallback, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router';
 import styles from './ProductCard.module.scss';
 import BackButton from 'components/BackButton';
 import Button from 'components/Button';
-import { getProductDetails } from 'api/agent/details';
-import { TProduct, TProductResponse } from 'entities/types/types';
 import ProductDetails from './components/ProductDetails';
 import RelatedProducts from './components/RelatedProducts';
-import { handleAddToCart, handleBuyNow } from 'utils/cart';
-import { makeProductDetailsSearchParams } from 'api/utils';
+import { handleBuyNow } from 'utils';
+import ProductDetailsStore from 'store/local/ProductDetailsStore';
+import { useLocalStore } from 'utils';
+import { observer } from 'mobx-react-lite';
+import rootStore from 'store/RootStore';
 
-const ProductCard = () => {
+const ProductCard = observer(() => {
   const { documentId } = useParams();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<TProduct>();
-  const [productIsLoading, setProductIsLoading] = useState(false);
+  const productStore = useLocalStore(() => new ProductDetailsStore());
+  const { productDetails } = productStore;
+  const { search } = useLocation();
+  const { setSearchParamsString } = rootStore.query;
+  const { addProductToCart } = rootStore.cart;
+
+  useEffect(() => {
+    if (search !== undefined) {
+      setSearchParamsString(search);
+    }
+  }, [search, setSearchParamsString]);
 
   useEffect(() => {
     if (documentId) {
-      const searchParams = makeProductDetailsSearchParams();
-
-      setProductIsLoading(true);
-      getProductDetails({ documentId, searchParams })
-        .then((res: TProductResponse) => {
-          setProduct(res.data);
-        })
-        .catch((err: string) => console.log(err))
-        .finally(() => {
-          setProductIsLoading(false);
-        });
+      productStore.downloadProductDetails({ documentId, searchParams: {} });
     }
-  }, [documentId]);
+  }, [documentId, productStore]);
+
+  const handleBuyProductNow = useCallback(() => {
+    const product = productStore.productDetails;
+    if (product?.id) handleBuyNow(product.id);
+  }, [productStore]);
+
+  const handleAddProductToCart = useCallback(() => {
+    const product = productDetails;
+    if (product) {
+      const { documentId, price } = product;
+      addProductToCart(documentId, price);
+    }
+  }, [productDetails, addProductToCart]);
 
   return (
     <section className={styles.wrapper}>
       <div className={styles.content}>
-        <BackButton caption="Назад" onBack={() => navigate(-1)} />
-        {product && (
-          <ProductDetails product={product} isLoading={productIsLoading}>
-            <Button onClick={() => handleBuyNow(product.id)}>Buy Now</Button>
-            <Button onClick={() => handleAddToCart(product.id)} variant="white">
+        <BackButton caption="Back" onBack={() => navigate(-1)} />
+        {productStore.productDetails && (
+          <ProductDetails product={productStore.productDetails} isLoading={productStore.isLoading}>
+            <Button onClick={handleBuyProductNow}>Buy Now</Button>
+            <Button onClick={handleAddProductToCart} variant="white">
               Add to Cart
             </Button>
           </ProductDetails>
         )}
-        {product && (
+        {productStore.productDetails && (
           <RelatedProducts
             productDocumentId={documentId ?? ''}
-            productCategoryDocumentId={product.productCategory?.documentId ?? ''}
+            productCategoryDocumentId={productStore.productDetails.productCategory?.documentId ?? ''}
+            addToCart={addProductToCart}
           />
         )}
       </div>
     </section>
   );
-};
+});
 
 export default ProductCard;

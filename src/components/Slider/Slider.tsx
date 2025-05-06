@@ -1,10 +1,10 @@
 import { FC, useState, useCallback } from 'react';
-import { TProductImage } from 'entities/types/types';
 import styles from './Slider.module.scss';
 import ArrowSide from 'components/icons/ArrowSide';
+import { TProductImageModel } from 'store/models';
 
 type TSliderProps = {
-  images: TProductImage[];
+  images: TProductImageModel[];
 };
 
 const Slider: FC<TSliderProps> = ({ images }) => {
